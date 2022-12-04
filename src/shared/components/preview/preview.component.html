@@ -1,0 +1,12 @@
+<canvas hidden #canvas height="0" width="0"></canvas>
+
+<div
+  cdkDropList
+  class="list"
+  *ngIf="pages | async as pages"
+  (cdkDropListDropped)="onChangePosition($event)"
+>
+  <div cdkDrag class="item" *ngFor="let preview of pages">
+    <img [src]="preview.base64" />
+  </div>
+</div>
