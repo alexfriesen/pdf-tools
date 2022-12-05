@@ -6,16 +6,16 @@ import { Subject } from 'rxjs';
 export class DocumentService {
   document: PDFDocument | undefined;
 
-  preview = new Subject<any>();
+  preview = new Subject<Uint8Array | undefined>();
 
-  async init(pdfBuffer: Buffer | ArrayBuffer) {
+  async load(pdfBuffer: Buffer | ArrayBuffer) {
     this.document = await PDFDocument.load(pdfBuffer);
     await this.updatePreview();
   }
 
   async applyPDF(pdfBuffer: Buffer | ArrayBuffer) {
     if (!this.document) {
-      return this.init(pdfBuffer);
+      return this.load(pdfBuffer);
     }
 
     const doc = await PDFDocument.load(pdfBuffer);
@@ -28,19 +28,28 @@ export class DocumentService {
     await this.updatePreview();
   }
 
+  async removePage(pageIndex: number) {
+    if ((this.document?.getPageCount() || 0) > 1) {
+      await this.document?.removePage(pageIndex);
+    } else {
+      delete this.document;
+    }
+    await this.updatePreview();
+  }
+
   // TODO: very unpredictable
-  async swapPages(pageNumber1: number, pageNumber2: number) {
+  async swapPages(pageIndex1: number, pageIndex2: number) {
     if (!this.document) return;
 
     const [page1, page2] = await this.document.copyPages(this.document, [
-      pageNumber1,
-      pageNumber2,
+      pageIndex1,
+      pageIndex2,
     ]);
 
-    await this.document.removePage(pageNumber2);
-    await this.document.insertPage(pageNumber2, page1);
-    await this.document.removePage(pageNumber1);
-    await this.document.insertPage(pageNumber1, page2);
+    await this.document.removePage(pageIndex2);
+    await this.document.insertPage(pageIndex2, page1);
+    await this.document.removePage(pageIndex1);
+    await this.document.insertPage(pageIndex1, page2);
 
     await this.updatePreview();
   }
@@ -57,8 +66,7 @@ export class DocumentService {
   }
 
   async updatePreview() {
-    if (!this.document) return;
-
-    this.preview.next(await this.document.save());
+    const buffer = (await this.document?.save()) || undefined;
+    this.preview.next(buffer);
   }
 }

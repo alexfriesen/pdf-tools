@@ -6,15 +6,17 @@ import {
   ElementRef,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { CdkDragDrop, DragDropModule } from '@angular/cdk/drag-drop';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { CdkDragDrop, DragDropModule } from '@angular/cdk/drag-drop';
 import { getDocument, GlobalWorkerOptions, version } from 'pdfjs-dist';
 import { BehaviorSubject, debounceTime, switchMap, tap } from 'rxjs';
 
 import { DocumentService } from '@shared/services/document.service';
 
 interface PagePreview {
-  pageNumber: number;
+  pageIndex: number;
   base64: string;
 }
 
@@ -24,7 +26,13 @@ interface PagePreview {
   styleUrls: ['./preview.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
-  imports: [CommonModule, DragDropModule, MatProgressBarModule],
+  imports: [
+    CommonModule,
+    MatIconModule,
+    MatButtonModule,
+    MatProgressBarModule,
+    DragDropModule,
+  ],
 })
 export class PreviewComponent {
   @ViewChild('canvas', { static: true })
@@ -38,6 +46,8 @@ export class PreviewComponent {
     debounceTime(200),
     tap(() => this.processing.next(true)),
     switchMap(async (buffer) => {
+      if (!buffer) return [];
+
       const canvas = this.canvas.nativeElement;
       const canvasContext = canvas.getContext('2d');
 
@@ -58,7 +68,7 @@ export class PreviewComponent {
         await task.promise;
 
         previewPages.push({
-          pageNumber,
+          pageIndex: pageNumber - 1,
           base64: canvas.toDataURL('image/png'),
         });
       }
@@ -78,5 +88,9 @@ export class PreviewComponent {
       event.currentIndex,
       event.previousIndex
     );
+  }
+
+  async onRemovePage(pageIndex: number) {
+    await this.documentService.removePage(pageIndex);
   }
 }

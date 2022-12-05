@@ -12,6 +12,13 @@
   (cdkDropListDropped)="onChangePosition($event)"
 >
   <div cdkDrag class="item" *ngFor="let preview of pages">
+    <button
+      class="remove"
+      mat-mini-fab
+      (click)="onRemovePage(preview.pageIndex)"
+    >
+      <mat-icon>delete</mat-icon>
+    </button>
     <img [src]="preview.base64" />
   </div>
 </div>
