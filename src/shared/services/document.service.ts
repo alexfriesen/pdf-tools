@@ -3,7 +3,7 @@ import { PDFDocument } from 'pdf-lib';
 import { Subject } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
-export class AppService {
+export class DocumentService {
   document: PDFDocument | undefined;
 
   preview = new Subject<any>();

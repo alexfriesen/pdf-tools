@@ -1,9 +1,10 @@
-import { Component, inject } from '@angular/core';
+import { Component, HostListener, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
 
-import { UploadComponent } from '@shared/components/upload/upload.component';
-import { FileDropDirective } from '@shared/directives/file-drop.directive';
-import { AppService } from './app.service';
+import { validateFileType } from '@shared/helpers/file.helper';
+import { DocumentService } from '@shared/services/document.service';
 import { PreviewComponent } from '@shared/components/preview/preview.component';
 
 @Component({
@@ -11,16 +12,65 @@ import { PreviewComponent } from '@shared/components/preview/preview.component';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
   standalone: true,
-  imports: [CommonModule, FileDropDirective, UploadComponent, PreviewComponent],
-  hostDirectives: [FileDropDirective],
+  imports: [CommonModule, MatIconModule, MatButtonModule, PreviewComponent],
 })
 export class AppComponent {
-  service = inject(AppService);
+  documentService = inject(DocumentService);
 
-  readonly preview = this.service.preview;
+  isHovering = false;
+  acceptTypes: string[] = ['application/pdf'];
+  private files: File[] = [];
+
+  @HostListener('drop', ['$event'])
+  async onDrop(event: DragEvent) {
+    this.stopEvent(event);
+
+    const files = event.dataTransfer?.files;
+    if (files) {
+      await this.addFiles(files);
+    }
+    this.isHovering = false;
+  }
+
+  @HostListener('dragover', ['$event'])
+  onDragOver(event: DragEvent) {
+    this.stopEvent(event);
+    this.isHovering = true;
+  }
+
+  @HostListener('dragleave', ['$event'])
+  onDragLeave(event: DragEvent) {
+    this.stopEvent(event);
+    this.isHovering = false;
+  }
+
+  private stopEvent(event: DragEvent) {
+    event.preventDefault();
+    event.stopPropagation();
+  }
+
+  async onFileChange(event: Event) {
+    const files = (event.target as HTMLInputElement).files;
+    if (files) {
+      await this.addFiles(files);
+    }
+  }
+
+  async addFiles(files: FileList) {
+    for (let i = 0; i < files.length; i++) {
+      const file = files.item(i);
+
+      if (!file) continue;
+
+      if (validateFileType(file, this.acceptTypes)) {
+        this.files.push(file);
+        await this.fileAdded(file);
+      }
+    }
+  }
 
   async fileAdded(data: File) {
     const buffer = await data.arrayBuffer();
-    await this.service.applyPDF(buffer);
+    await this.documentService.applyPDF(buffer);
   }
 }

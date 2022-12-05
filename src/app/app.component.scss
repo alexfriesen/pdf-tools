@@ -1,0 +1,34 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+header,
+footer {
+  display: flex;
+  flex: 0 1 auto;
+  justify-content: center;
+  margin: 1rem;
+}
+
+main {
+  display: flex;
+  flex: 1 0 auto;
+  flex-direction: column;
+  width: 100%;
+}
+
+.dropzone {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+
+  &.hovering {
+    box-shadow: inset 0 0 20px #3f51b5, inset 0 0 20px #3f51b5,
+      inset 0 0 20px #3f51b5;
+    color: #dadada !important;
+  }
+}

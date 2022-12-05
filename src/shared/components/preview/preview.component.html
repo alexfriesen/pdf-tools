@@ -1,5 +1,10 @@
 <canvas hidden #canvas height="0" width="0"></canvas>
 
+<mat-progress-bar
+  [mode]="'indeterminate'"
+  *ngIf="processing | async"
+></mat-progress-bar>
+
 <div
   cdkDropList
   class="list"

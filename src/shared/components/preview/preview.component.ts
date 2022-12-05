@@ -7,10 +7,11 @@ import {
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CdkDragDrop, DragDropModule } from '@angular/cdk/drag-drop';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { getDocument, GlobalWorkerOptions, version } from 'pdfjs-dist';
-import { debounceTime, switchMap } from 'rxjs';
+import { BehaviorSubject, debounceTime, switchMap, tap } from 'rxjs';
 
-import { AppService } from '../../../app/app.service';
+import { DocumentService } from '@shared/services/document.service';
 
 interface PagePreview {
   pageNumber: number;
@@ -23,17 +24,19 @@ interface PagePreview {
   styleUrls: ['./preview.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
-  imports: [CommonModule, DragDropModule],
-  hostDirectives: [],
+  imports: [CommonModule, DragDropModule, MatProgressBarModule],
 })
 export class PreviewComponent {
   @ViewChild('canvas', { static: true })
   canvas!: ElementRef<HTMLCanvasElement>;
 
-  appService = inject(AppService);
+  documentService = inject(DocumentService);
 
-  pages = this.appService.preview.pipe(
-    debounceTime(100),
+  processing = new BehaviorSubject(false);
+
+  pages = this.documentService.preview.pipe(
+    debounceTime(200),
+    tap(() => this.processing.next(true)),
     switchMap(async (buffer) => {
       const canvas = this.canvas.nativeElement;
       const canvasContext = canvas.getContext('2d');
@@ -61,7 +64,8 @@ export class PreviewComponent {
       }
 
       return previewPages;
-    })
+    }),
+    tap(() => this.processing.next(false))
   );
 
   constructor() {
@@ -70,7 +74,9 @@ export class PreviewComponent {
   }
 
   async onChangePosition(event: CdkDragDrop<string[]>) {
-    console.log(event);
-    await this.appService.swapPages(event.currentIndex, event.previousIndex);
+    await this.documentService.swapPages(
+      event.currentIndex,
+      event.previousIndex
+    );
   }
 }
