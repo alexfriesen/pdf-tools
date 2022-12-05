@@ -1,10 +1,4 @@
-import {
-  Component,
-  ChangeDetectionStrategy,
-  inject,
-  ViewChild,
-  ElementRef,
-} from '@angular/core';
+import { Component, ChangeDetectionStrategy, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
@@ -35,12 +29,9 @@ interface PagePreview {
   ],
 })
 export class PreviewComponent {
-  @ViewChild('canvas', { static: true })
-  canvas!: ElementRef<HTMLCanvasElement>;
+  private readonly documentService = inject(DocumentService);
 
-  documentService = inject(DocumentService);
-
-  processing = new BehaviorSubject(false);
+  readonly processing = new BehaviorSubject(false);
 
   pages = this.documentService.preview.pipe(
     debounceTime(200),
@@ -48,7 +39,7 @@ export class PreviewComponent {
     switchMap(async (buffer) => {
       if (!buffer) return [];
 
-      const canvas = this.canvas.nativeElement;
+      const canvas = document.createElement('canvas');
       const canvasContext = canvas.getContext('2d');
 
       const loadingTask = getDocument(buffer);

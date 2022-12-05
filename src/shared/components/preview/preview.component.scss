@@ -1,5 +1,16 @@
 :host {
   position: relative;
+  text-align: center;
+}
+
+.empty {
+  margin: 3rem;
+
+  mat-icon {
+    width: 9rem;
+    height: 9rem;
+    font-size: 9rem;
+  }
 }
 
 mat-progress-bar {

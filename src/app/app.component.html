@@ -3,17 +3,26 @@
     <mat-icon>attach_file</mat-icon>
     Pick a PDF-File
   </button>
+
+  <button
+    mat-fab
+    extended
+    color="primary"
+    *ngIf="canDownload | async"
+    (click)="downloadFile()"
+  >
+    <mat-icon>download</mat-icon>
+    Download
+  </button>
+
+  <a mat-button color="primary" href="https://github.com/alexfriesen/pdf-tools">
+    PDF-Tools on github
+  </a>
 </header>
 
 <main>
   <app-preview></app-preview>
 </main>
-
-<footer>
-  <a mat-button color="primary" href="https://github.com/alexfriesen/pdf-tools">
-    PDF-Tools on github
-  </a>
-</footer>
 
 <div class="dropzone" [class.hovering]="isHovering">
   <input

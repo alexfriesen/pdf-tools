@@ -1,4 +1,9 @@
-import { Component, HostListener, inject } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  HostListener,
+  inject,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
@@ -6,20 +11,26 @@ import { MatButtonModule } from '@angular/material/button';
 import { validateFileType } from '@shared/helpers/file.helper';
 import { DocumentService } from '@shared/services/document.service';
 import { PreviewComponent } from '@shared/components/preview/preview.component';
+import { map } from 'rxjs';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
   imports: [CommonModule, MatIconModule, MatButtonModule, PreviewComponent],
 })
 export class AppComponent {
-  documentService = inject(DocumentService);
+  private readonly documentService = inject(DocumentService);
+
+  readonly acceptTypes: string[] = ['application/pdf'];
 
   isHovering = false;
-  acceptTypes: string[] = ['application/pdf'];
-  private files: File[] = [];
+
+  readonly canDownload = this.documentService.preview.pipe(
+    map((preview) => !!preview)
+  );
 
   @HostListener('drop', ['$event'])
   async onDrop(event: DragEvent) {
@@ -63,7 +74,6 @@ export class AppComponent {
       if (!file) continue;
 
       if (validateFileType(file, this.acceptTypes)) {
-        this.files.push(file);
         await this.fileAdded(file);
       }
     }
@@ -72,5 +82,9 @@ export class AppComponent {
   async fileAdded(data: File) {
     const buffer = await data.arrayBuffer();
     await this.documentService.applyPDF(buffer);
+  }
+
+  async downloadFile() {
+    await this.documentService.save('new');
   }
 }
