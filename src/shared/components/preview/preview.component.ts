@@ -4,8 +4,13 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { CdkDragDrop, DragDropModule } from '@angular/cdk/drag-drop';
-import { getDocument, GlobalWorkerOptions, version } from 'pdfjs-dist';
 import { BehaviorSubject, debounceTime, switchMap, tap } from 'rxjs';
+import {
+  getDocument,
+  GlobalWorkerOptions,
+  PDFDocumentProxy,
+  version,
+} from 'pdfjs-dist';
 
 import { DocumentService } from '@shared/services/document.service';
 
@@ -34,43 +39,25 @@ export class PreviewComponent {
   readonly processing = new BehaviorSubject(false);
 
   pages = this.documentService.preview.pipe(
-    debounceTime(200),
+    debounceTime(100),
     tap(() => this.processing.next(true)),
     switchMap(async (buffer) => {
       if (!buffer) return [];
 
-      const canvas = document.createElement('canvas');
-      const canvasContext = canvas.getContext('2d');
+      const task = getDocument(buffer);
+      const doc = await task.promise;
 
-      const loadingTask = getDocument(buffer);
-      const doc = await loadingTask.promise;
-
-      const previewPages: PagePreview[] = [];
-
-      for (let pageNumber = 1; pageNumber <= doc.numPages; pageNumber++) {
-        const page = await doc.getPage(pageNumber);
-
-        const viewport = page.getViewport({ scale: 1 });
-        canvas.height = viewport.height;
-        canvas.width = viewport.width;
-        const renderContext: any = { canvasContext, viewport };
-
-        const task = page.render(renderContext);
-        await task.promise;
-
-        previewPages.push({
-          pageIndex: pageNumber - 1,
-          base64: canvas.toDataURL('image/png'),
-        });
-      }
-
-      return previewPages;
+      return Promise.all(
+        Array.from(Array(doc.numPages).keys()).map((pageNumber) =>
+          this.renderPagePreview(doc, pageNumber)
+        )
+      );
     }),
     tap(() => this.processing.next(false))
   );
 
   constructor() {
-    const pdfWorkerSrc = `https://cdn.jsdelivr.net/npm/pdfjs-dist@${version}/legacy/build/pdf.worker.min.js`;
+    const pdfWorkerSrc = `https://cdn.jsdelivr.net/npm/pdfjs-dist@${version}/build/pdf.worker.min.js`;
     GlobalWorkerOptions.workerSrc = pdfWorkerSrc;
   }
 
@@ -83,5 +70,28 @@ export class PreviewComponent {
 
   async onRemovePage(pageIndex: number) {
     await this.documentService.removePage(pageIndex);
+  }
+
+  private async renderPagePreview(
+    doc: PDFDocumentProxy,
+    pageIndex: number
+  ): Promise<PagePreview> {
+    const page = await doc.getPage(pageIndex + 1);
+
+    const viewport = page.getViewport({ scale: 0.5 });
+
+    const canvas = document.createElement('canvas');
+    const canvasContext = canvas.getContext('2d');
+    canvas.height = viewport.height;
+    canvas.width = viewport.width;
+    const renderContext: any = { canvasContext, viewport };
+
+    const task = page.render(renderContext);
+    await task.promise;
+
+    return {
+      pageIndex,
+      base64: canvas.toDataURL('image/png'),
+    };
   }
 }
