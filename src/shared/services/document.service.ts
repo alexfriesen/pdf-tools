@@ -6,16 +6,16 @@ import { Subject } from 'rxjs';
 export class DocumentService {
   document: PDFDocument | undefined;
 
-  preview = new Subject<Uint8Array | undefined>();
+  readonly documentBuffer$ = new Subject<Uint8Array | null>();
 
-  async load(pdfBuffer: Buffer | ArrayBuffer) {
+  async loadPDF(pdfBuffer: Buffer | ArrayBuffer) {
     this.document = await PDFDocument.load(pdfBuffer);
     await this.updatePreview();
   }
 
-  async applyPDF(pdfBuffer: Buffer | ArrayBuffer) {
+  async appendPDF(pdfBuffer: Buffer | ArrayBuffer) {
     if (!this.document) {
-      return this.load(pdfBuffer);
+      return this.loadPDF(pdfBuffer);
     }
 
     const doc = await PDFDocument.load(pdfBuffer);
@@ -58,15 +58,25 @@ export class DocumentService {
     if (!this.document) return;
 
     const dataUri = await this.document.saveAsBase64({ dataUri: true });
-
-    const link = document.createElement('a');
-    link.href = dataUri;
-    link.download = `${fileName}.pdf`;
-    link.click();
+    this.downloadAs(dataUri, `${fileName}.pdf`);
   }
 
   async updatePreview() {
-    const buffer = (await this.document?.save()) || undefined;
-    this.preview.next(buffer);
+    const buffer = (await this.document?.save()) || null;
+    this.documentBuffer$.next(buffer);
+  }
+
+  private downloadAs(dataUri: string, name: string) {
+    // Namespace is used to prevent conflict w/ Chrome Poper Blocker extension (Issue https://github.com/eligrey/FileSaver.js/issues/561)
+    const a = document.createElementNS(
+      'http://www.w3.org/1999/xhtml',
+      'a'
+    ) as HTMLAnchorElement;
+    a.download = name;
+    a.rel = 'noopener';
+    a.href = dataUri;
+
+    setTimeout(() => URL.revokeObjectURL(a.href), 40 /* sec */ * 1000);
+    setTimeout(() => a.click(), 0);
   }
 }

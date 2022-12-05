@@ -1,6 +1,6 @@
 <mat-progress-bar
-  [mode]="'indeterminate'"
-  *ngIf="processing | async"
+  mode="indeterminate"
+  *ngIf="ispPocessing$ | async"
 ></mat-progress-bar>
 
 <ng-template #empty>
@@ -10,12 +10,13 @@
   </div>
 </ng-template>
 
-<ng-container *ngIf="pages | async as pages; else empty">
+<ng-container *ngIf="pages$ | async as pages; else empty">
   <div cdkDropList class="list" (cdkDropListDropped)="onChangePosition($event)">
     <div cdkDrag class="item" *ngFor="let preview of pages">
       <button
         class="remove"
         mat-mini-fab
+        color="warn"
         (click)="onRemovePage(preview.pageIndex)"
       >
         <mat-icon>delete</mat-icon>

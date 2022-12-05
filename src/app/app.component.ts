@@ -28,7 +28,7 @@ export class AppComponent {
 
   isHovering = false;
 
-  readonly canDownload = this.documentService.preview.pipe(
+  readonly canDownload$ = this.documentService.documentBuffer$.pipe(
     map((preview) => !!preview)
   );
 
@@ -81,7 +81,7 @@ export class AppComponent {
 
   async fileAdded(data: File) {
     const buffer = await data.arrayBuffer();
-    await this.documentService.applyPDF(buffer);
+    await this.documentService.appendPDF(buffer);
   }
 
   async downloadFile() {

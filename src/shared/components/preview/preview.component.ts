@@ -36,13 +36,13 @@ interface PagePreview {
 export class PreviewComponent {
   private readonly documentService = inject(DocumentService);
 
-  readonly processing = new BehaviorSubject(false);
+  readonly ispPocessing$ = new BehaviorSubject(false);
 
-  pages = this.documentService.preview.pipe(
+  pages$ = this.documentService.documentBuffer$.pipe(
     debounceTime(100),
-    tap(() => this.processing.next(true)),
+    tap(() => this.ispPocessing$.next(true)),
     switchMap(async (buffer) => {
-      if (!buffer) return [];
+      if (!buffer) return undefined;
 
       const task = getDocument(buffer);
       const doc = await task.promise;
@@ -53,7 +53,7 @@ export class PreviewComponent {
         )
       );
     }),
-    tap(() => this.processing.next(false))
+    tap(() => this.ispPocessing$.next(false))
   );
 
   constructor() {

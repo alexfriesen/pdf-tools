@@ -1,5 +1,5 @@
 <header>
-  <button mat-fab extended color="accent" type="button" (click)="input.click()">
+  <button mat-fab extended color="accent" (click)="input.click()">
     <mat-icon>attach_file</mat-icon>
     Pick a PDF-File
   </button>
@@ -8,14 +8,19 @@
     mat-fab
     extended
     color="primary"
-    *ngIf="canDownload | async"
+    *ngIf="canDownload$ | async"
     (click)="downloadFile()"
   >
     <mat-icon>download</mat-icon>
     Download
   </button>
 
-  <a mat-button color="primary" href="https://github.com/alexfriesen/pdf-tools">
+  <a
+    mat-button
+    color="primary"
+    href="https://github.com/alexfriesen/pdf-tools"
+    target="_blank"
+  >
     PDF-Tools on github
   </a>
 </header>
