@@ -1,4 +1,4 @@
-# PdfTools
+# PDF-Tools
 
 This project contains some handy pdf tools.
 
