@@ -8,12 +8,12 @@ export class DocumentService {
 
   readonly documentBuffer$ = new Subject<Uint8Array | null>();
 
-  async loadPDF(pdfBuffer: Buffer | ArrayBuffer) {
+  async loadPDF(pdfBuffer: ArrayBuffer) {
     this.document = await PDFDocument.load(pdfBuffer);
     await this.updatePreview();
   }
 
-  async appendPDF(pdfBuffer: Buffer | ArrayBuffer) {
+  async appendPDF(pdfBuffer: ArrayBuffer) {
     if (!this.document) {
       return this.loadPDF(pdfBuffer);
     }
