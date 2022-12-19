@@ -1,5 +1,5 @@
 <header>
-  <button mat-fab extended color="accent" (click)="input.click()">
+  <button mat-fab extended color="accent" (click)="onOpenFilePromt()">
     <mat-icon>attach_file</mat-icon>
     Pick a PDF-File
   </button>
@@ -9,7 +9,7 @@
     extended
     color="primary"
     *ngIf="canDownload$ | async"
-    (click)="downloadFile()"
+    (click)="onDownloadFile()"
   >
     <mat-icon>download</mat-icon>
     Download
@@ -29,13 +29,14 @@
   <app-preview></app-preview>
 </main>
 
-<div class="dropzone" [class.hovering]="isHovering">
-  <input
-    #input
-    hidden
-    type="file"
-    multiple
-    [accept]="acceptTypes.join('|')"
-    (change)="onFileChange($event)"
-  />
+<div class="actions" *ngIf="canDownload$ | async">
+  <button mat-mini-fab (click)="onOpenFilePromt()">
+    <mat-icon>attach_file</mat-icon>
+  </button>
+
+  <button mat-fab color="primary" (click)="onDownloadFile()">
+    <mat-icon>download</mat-icon>
+  </button>
 </div>
+
+<div class="dropzone" [class.hovering]="isHovering"></div>

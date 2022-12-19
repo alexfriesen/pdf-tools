@@ -22,6 +22,17 @@ main {
   overflow: auto;
 }
 
+.actions {
+  position: fixed;
+  bottom: 1rem;
+  right: 1rem;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
 .dropzone {
   position: absolute;
   top: 0;

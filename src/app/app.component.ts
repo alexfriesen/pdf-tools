@@ -7,11 +7,11 @@ import {
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
+import { map } from 'rxjs';
 
-import { validateFileType } from '@shared/helpers/file.helper';
+import { UploadService } from '@shared/services/upload.service';
 import { DocumentService } from '@shared/services/document.service';
 import { PreviewComponent } from '@shared/components/preview/preview.component';
-import { map } from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -22,9 +22,8 @@ import { map } from 'rxjs';
   imports: [CommonModule, MatIconModule, MatButtonModule, PreviewComponent],
 })
 export class AppComponent {
+  private readonly uploadService = inject(UploadService);
   private readonly documentService = inject(DocumentService);
-
-  readonly acceptTypes: string[] = ['application/pdf'];
 
   isHovering = false;
 
@@ -32,13 +31,21 @@ export class AppComponent {
     map((preview) => !!preview)
   );
 
+  async onDownloadFile() {
+    await this.documentService.save('new');
+  }
+
+  onOpenFilePromt() {
+    this.uploadService.openFilePrompt();
+  }
+
   @HostListener('drop', ['$event'])
   async onDrop(event: DragEvent) {
     this.stopEvent(event);
 
     const files = event.dataTransfer?.files;
     if (files) {
-      await this.addFiles(files);
+      await this.uploadService.addFiles(files);
     }
     this.isHovering = false;
   }
@@ -58,33 +65,5 @@ export class AppComponent {
   private stopEvent(event: DragEvent) {
     event.preventDefault();
     event.stopPropagation();
-  }
-
-  async onFileChange(event: Event) {
-    const files = (event.target as HTMLInputElement).files;
-    if (files) {
-      await this.addFiles(files);
-    }
-  }
-
-  async addFiles(files: FileList) {
-    for (let i = 0; i < files.length; i++) {
-      const file = files.item(i);
-
-      if (!file) continue;
-
-      if (validateFileType(file, this.acceptTypes)) {
-        await this.fileAdded(file);
-      }
-    }
-  }
-
-  async fileAdded(data: File) {
-    const buffer = await data.arrayBuffer();
-    await this.documentService.appendPDF(buffer);
-  }
-
-  async downloadFile() {
-    await this.documentService.save('new');
   }
 }
