@@ -43,10 +43,11 @@ export class AppComponent {
   async onDrop(event: DragEvent) {
     this.stopEvent(event);
 
-    const files = event.dataTransfer?.files;
-    if (files) {
-      await this.uploadService.addFiles(files);
+    const items = event.dataTransfer?.items;
+    if (items) {
+      await this.uploadService.addDataTransferItemList(items);
     }
+
     this.isHovering = false;
   }
 

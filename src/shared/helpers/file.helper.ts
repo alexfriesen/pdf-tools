@@ -1,39 +1,39 @@
 export const readFileAsDataURLAsync = (file: File) =>
-	new Promise<string | ArrayBuffer | null>((resolve, reject) => {
-		const reader = new FileReader();
+  new Promise<string | ArrayBuffer | null>((resolve, reject) => {
+    const reader = new FileReader();
 
-		reader.onload = () => {
-			resolve(reader.result);
-		};
+    reader.onload = () => {
+      resolve(reader.result);
+    };
 
-		reader.onerror = reject;
+    reader.onerror = reject;
 
-		reader.readAsDataURL(file);
-	});
+    reader.readAsDataURL(file);
+  });
 
 export const validateFileType = (file: File, acceptTypes: string[]) => {
-	if (acceptTypes.includes('*')) {
-		return true;
-	}
+  if (acceptTypes.includes('*')) {
+    return true;
+  }
 
-	const acceptFiletypes = acceptTypes.map((item) => item.toLowerCase().trim());
-	const filetype = file.type.toLowerCase();
-	const filename = file.name.toLowerCase();
+  const acceptFiletypes = acceptTypes.map((item) => item.toLowerCase().trim());
+  const filetype = file.type.toLowerCase();
+  const filename = file.name.toLowerCase();
 
-	const matchedFileType = acceptFiletypes.find((acceptFiletype) => {
-		// check for wildcard mimetype (e.g. image/*)
-		if (acceptFiletype.endsWith('/*')) {
-			return filetype.split('/')[0] === acceptFiletype.split('/')[0];
-		}
+  const matchedFileType = acceptFiletypes.find((acceptFiletype) => {
+    // check for wildcard mimetype (e.g. image/*)
+    if (acceptFiletype.endsWith('/*')) {
+      return filetype.split('/')[0] === acceptFiletype.split('/')[0];
+    }
 
-		// check for file extension (e.g. .csv)
-		if (acceptFiletype.startsWith('.')) {
-			return filename.endsWith(acceptFiletype);
-		}
+    // check for file extension (e.g. .csv)
+    if (acceptFiletype.startsWith('.')) {
+      return filename.endsWith(acceptFiletype);
+    }
 
-		// check for exact mimetype match (e.g. image/jpeg)
-		return acceptFiletype === filetype;
-	});
+    // check for exact mimetype match (e.g. image/jpeg)
+    return acceptFiletype === filetype;
+  });
 
-	return !!matchedFileType;
+  return !!matchedFileType;
 };

@@ -1,6 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
 import { validateFileType } from '../helpers/file.helper';
+import { parseDataTransferItem } from '../helpers/filesystem.helper';
 import { DocumentService } from './document.service';
 
 @Injectable({ providedIn: 'root' })
@@ -21,28 +22,54 @@ export class UploadService {
     const files = target.files;
 
     if (files) {
-      await this.addFiles(files);
+      await this.addFileList(files);
     }
 
     // reset current value
     target.value = '';
   }
 
-  async addFiles(files: FileList) {
-    for (let i = 0; i < files.length; i++) {
-      const file = files.item(i);
+  async addFileList(list: FileList) {
+    const files: File[] = [];
+
+    for (let i = 0; i < list.length; i++) {
+      const file = list.item(i);
 
       if (!file) continue;
 
       if (validateFileType(file, this.acceptTypes)) {
-        await this.addFile(file);
+        files.push(file);
       }
     }
+
+    await this.addFiles(files);
   }
 
-  async addFile(file: File) {
-    const buffer = await file.arrayBuffer();
-    await this.documentService.appendPDF(buffer);
+  async addDataTransferItemList(list: DataTransferItemList) {
+    const items = Array.from(list);
+    const fileChunks = await Promise.all(
+      items.map(async (item) => {
+        const files = [];
+        const parsedFiles = await parseDataTransferItem(item);
+
+        for (const file of parsedFiles) {
+          if (validateFileType(file, this.acceptTypes)) {
+            files.push(file);
+          }
+        }
+
+        return files;
+      })
+    );
+
+    await this.addFiles(fileChunks.flat());
+  }
+
+  async addFiles(files: File[]) {
+    for (const file of files) {
+      const buffer = await file.arrayBuffer();
+      await this.documentService.appendPDF(buffer);
+    }
   }
 
   private createUploadElement() {
@@ -50,6 +77,7 @@ export class UploadService {
     element.hidden = true;
     element.type = 'file';
     element.multiple = true;
+    // element.webkitdirectory = true;
     element.accept = this.acceptTypes.join('|');
     element.onchange = (event) => this.onFileChange(event);
 
