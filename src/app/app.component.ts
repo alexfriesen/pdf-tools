@@ -42,13 +42,12 @@ export class AppComponent {
   @HostListener('drop', ['$event'])
   async onDrop(event: DragEvent) {
     this.stopEvent(event);
+    this.isHovering = false;
 
     const items = event.dataTransfer?.items;
     if (items) {
       await this.uploadService.addDataTransferItemList(items);
     }
-
-    this.isHovering = false;
   }
 
   @HostListener('dragover', ['$event'])

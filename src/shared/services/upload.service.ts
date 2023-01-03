@@ -46,7 +46,7 @@ export class UploadService {
   }
 
   async addDataTransferItemList(list: DataTransferItemList) {
-    const items = Array.from(list);
+    const items = Array.from(list).filter((item) => item.kind === 'file');
     const fileChunks = await Promise.all(
       items.map(async (item) => {
         const files = [];

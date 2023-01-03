@@ -81,7 +81,10 @@ export class PreviewComponent {
     const viewport = page.getViewport({ scale: 0.5 });
 
     const canvas = document.createElement('canvas');
-    const canvasContext = canvas.getContext('2d');
+    const canvasContext = canvas.getContext('2d', {
+      willReadFrequently: true,
+    });
+
     canvas.height = viewport.height;
     canvas.width = viewport.width;
     const renderContext: any = { canvasContext, viewport };
@@ -91,7 +94,7 @@ export class PreviewComponent {
 
     return {
       pageIndex,
-      base64: canvas.toDataURL('image/png'),
+      base64: canvas.toDataURL(),
     };
   }
 }
