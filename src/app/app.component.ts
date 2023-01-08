@@ -7,11 +7,12 @@ import {
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
+import { TranslocoModule } from '@ngneat/transloco';
 import { map } from 'rxjs';
 
-import { UploadService } from '@shared/services/upload.service';
-import { DocumentService } from '@shared/services/document.service';
-import { PreviewComponent } from '@shared/components/preview/preview.component';
+import { UploadService } from '@app/services/upload.service';
+import { DocumentService } from '@app/services/document.service';
+import { PreviewComponent } from '@app/preview/preview.component';
 
 @Component({
   selector: 'app-root',
@@ -19,7 +20,13 @@ import { PreviewComponent } from '@shared/components/preview/preview.component';
   styleUrls: ['./app.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
-  imports: [CommonModule, MatIconModule, MatButtonModule, PreviewComponent],
+  imports: [
+    CommonModule,
+    MatIconModule,
+    MatButtonModule,
+    PreviewComponent,
+    TranslocoModule,
+  ],
 })
 export class AppComponent {
   private readonly uploadService = inject(UploadService);

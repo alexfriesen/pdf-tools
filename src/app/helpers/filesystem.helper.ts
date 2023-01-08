@@ -65,3 +65,17 @@ export function isFileSystemFile(
 ): entry is FileSystemFileEntry {
   return !!entry && entry.isFile;
 }
+
+// async function* getFilesRecursively(entry: FileSystemEntry) {
+//     if (entry.kind === 'file') {
+//         const file = await entry.getFile();
+//         if (file !== null) {
+//             file.relativePath = getRelativePath(entry);
+//             yield file;
+//         }
+//     } else if (entry.kind === 'directory') {
+//         for await (const handle of entry.values()) {
+//             yield* getFilesRecursively(handle);
+//         }
+//     }
+// }

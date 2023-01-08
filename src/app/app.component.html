@@ -1,7 +1,7 @@
 <header>
   <button mat-fab extended color="accent" (click)="onOpenFilePromt()">
     <mat-icon>attach_file</mat-icon>
-    Pick a PDF-File
+    {{ "pick file" | transloco }}
   </button>
 
   <button
@@ -12,7 +12,7 @@
     (click)="onDownloadFile()"
   >
     <mat-icon>download</mat-icon>
-    Download
+    {{ "download" | transloco }}
   </button>
 
   <a
@@ -21,7 +21,7 @@
     href="https://github.com/alexfriesen/pdf-tools"
     target="_blank"
   >
-    PDF-Tools on github
+    {{ "github link" | transloco }}
   </a>
 </header>
 

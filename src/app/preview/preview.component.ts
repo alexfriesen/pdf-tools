@@ -1,5 +1,6 @@
 import { Component, ChangeDetectionStrategy, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { TranslocoModule } from '@ngneat/transloco';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
@@ -12,7 +13,7 @@ import {
   version,
 } from 'pdfjs-dist';
 
-import { DocumentService } from '@shared/services/document.service';
+import { DocumentService } from '@app/services/document.service';
 
 interface PagePreview {
   pageIndex: number;
@@ -31,6 +32,7 @@ interface PagePreview {
     MatButtonModule,
     MatProgressBarModule,
     DragDropModule,
+    TranslocoModule,
   ],
 })
 export class PreviewComponent {
