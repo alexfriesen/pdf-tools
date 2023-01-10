@@ -8,11 +8,10 @@ import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { TranslocoModule } from '@ngneat/transloco';
-import { map } from 'rxjs';
 
 import { UploadService } from '@app/services/upload.service';
-import { DocumentService } from '@app/services/document.service';
 import { PreviewComponent } from '@app/preview/preview.component';
+import { HeaderComponent } from './header/header.component';
 
 @Component({
   selector: 'app-root',
@@ -24,27 +23,14 @@ import { PreviewComponent } from '@app/preview/preview.component';
     CommonModule,
     MatIconModule,
     MatButtonModule,
-    PreviewComponent,
     TranslocoModule,
+    PreviewComponent,
+    HeaderComponent,
   ],
 })
 export class AppComponent {
   private readonly uploadService = inject(UploadService);
-  private readonly documentService = inject(DocumentService);
-
   isHovering = false;
-
-  readonly canDownload$ = this.documentService.documentBuffer$.pipe(
-    map((preview) => !!preview)
-  );
-
-  async onDownloadFile() {
-    await this.documentService.save('new');
-  }
-
-  onOpenFilePromt() {
-    this.uploadService.openFilePrompt();
-  }
 
   @HostListener('drop', ['$event'])
   async onDrop(event: DragEvent) {

@@ -57,9 +57,10 @@ export const defaultLangInitializer = {
         availableLangs: ['en', 'de'],
         defaultLang: 'en',
         fallbackLang: 'en',
-        // Remove this option if your application
-        // doesn't support changing language in runtime.
-        reRenderOnLangChange: true,
+        missingHandler: {
+          // It will use the first language set in the `fallbackLang` property
+          useFallbackTranslation: true,
+        },
         prodMode: !isDevMode(),
       }),
     },

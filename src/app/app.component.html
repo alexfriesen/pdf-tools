@@ -1,42 +1,7 @@
-<header>
-  <button mat-fab extended color="accent" (click)="onOpenFilePromt()">
-    <mat-icon>attach_file</mat-icon>
-    {{ "pick file" | transloco }}
-  </button>
-
-  <button
-    mat-fab
-    extended
-    color="primary"
-    *ngIf="canDownload$ | async"
-    (click)="onDownloadFile()"
-  >
-    <mat-icon>download</mat-icon>
-    {{ "download" | transloco }}
-  </button>
-
-  <a
-    mat-button
-    color="primary"
-    href="https://github.com/alexfriesen/pdf-tools"
-    target="_blank"
-  >
-    {{ "github link" | transloco }}
-  </a>
-</header>
+<app-header></app-header>
 
 <main>
   <app-preview></app-preview>
 </main>
-
-<div class="actions" *ngIf="canDownload$ | async">
-  <button mat-mini-fab (click)="onOpenFilePromt()">
-    <mat-icon>attach_file</mat-icon>
-  </button>
-
-  <button mat-fab color="primary" (click)="onDownloadFile()">
-    <mat-icon>download</mat-icon>
-  </button>
-</div>
 
 <div class="dropzone" [class.hovering]="isHovering"></div>

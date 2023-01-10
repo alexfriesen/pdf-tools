@@ -1,0 +1,32 @@
+:host {
+  position: relative;
+  z-index: 1;
+}
+
+header,
+footer {
+  display: flex;
+  flex: 0 1 auto;
+  align-items: center;
+  justify-content: space-between;
+
+  margin: 1rem;
+}
+
+mat-progress-bar {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
+.actions {
+  position: fixed;
+  bottom: 1rem;
+  right: 1rem;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}

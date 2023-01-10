@@ -13,11 +13,8 @@
   }
 }
 
-mat-progress-bar {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
+mat-progress-spinner {
+  margin: 2rem;
 }
 
 .list {
@@ -32,6 +29,10 @@ mat-progress-bar {
   position: relative;
   border-radius: 0.25rem;
   border: grey solid 2px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
   &:hover {
     border-color: #3f51b5;
