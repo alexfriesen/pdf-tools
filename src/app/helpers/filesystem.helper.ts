@@ -1,9 +1,18 @@
-export const parseDataTransferItem = async (item: DataTransferItem) => {
-  if (typeof item.webkitGetAsEntry === 'function') {
-    const entry = item.webkitGetAsEntry();
+export const parseDataTransferItem = async (
+  item: DataTransferItem
+): Promise<File[]> => {
+  // TODO: needs more investigation
+  // if (supportsFileSystemAccessAPI) {
+  //   return generatorToArray(
+  //     readFileHandlesRecursively(item.getAsFileSystemHandle())
+  //   );
+  // }
 
+  if (supportsWebkitGetAsEntry) {
+    // return readFileSystemEntryAsync(item.webkitGetAsEntry());
+    const entry = item.webkitGetAsEntry();
     if (entry) {
-      return readFileSystemEntryAsync(entry);
+      return generatorToArray(readFileSystemEntryRecursively(entry));
     }
   }
 
@@ -15,44 +24,39 @@ export const parseDataTransferItem = async (item: DataTransferItem) => {
   return [];
 };
 
-export const readFileSystemEntryAsync = (entry: FileSystemEntry) =>
-  new Promise<File[]>((resolve, reject) => {
-    let iterations = 0;
-    const files: File[] = [];
-
-    readEntry(entry);
-
-    function readEntry(entry: FileSystemEntry) {
-      if (isFileSystemFile(entry)) {
-        iterations++;
-        entry.file((file) => {
-          iterations--;
-          files.push(file);
-
-          if (iterations === 0) {
-            resolve(files);
-          }
-        });
-      } else if (isFileSystemDirectory(entry)) {
-        readReaderContent(entry.createReader());
-      }
+async function* readFileHandlesRecursively(
+  entry: FileSystemHandle
+): AsyncGenerator<File> {
+  if (isFileSystemFileHanle(entry)) {
+    const file = await entry.getFile();
+    if (file !== null) {
+      // file.relativePath = getRelativePath(entry);
+      yield file;
     }
-
-    function readReaderContent(reader: FileSystemDirectoryReader) {
-      iterations++;
-
-      reader.readEntries(function (entries) {
-        iterations--;
-        for (const entry of entries) {
-          readEntry(entry);
-        }
-
-        if (iterations === 0) {
-          resolve(files);
-        }
-      }, reject);
+  } else if (isFileSystemDirectoryHandle(entry)) {
+    const handles = (entry as any).values();
+    for await (const handle of handles) {
+      yield* readFileHandlesRecursively(handle);
     }
-  });
+  }
+}
+
+async function* readFileSystemEntryRecursively(
+  entry: FileSystemEntry
+): AsyncGenerator<File> {
+  if (isFileSystemFile(entry)) {
+    const file = await new Promise<File>((resolve) => entry.file(resolve));
+    yield file;
+  } else if (isFileSystemDirectory(entry)) {
+    const reader = entry.createReader();
+    const entries = await new Promise<FileSystemEntry[]>((resolve) =>
+      reader.readEntries(resolve)
+    );
+    for (const entry of entries) {
+      yield* readFileSystemEntryRecursively(entry);
+    }
+  }
+}
 
 export function isFileSystemDirectory(
   entry?: FileSystemEntry | null
@@ -66,16 +70,25 @@ export function isFileSystemFile(
   return !!entry && entry.isFile;
 }
 
-// async function* getFilesRecursively(entry: FileSystemEntry) {
-//     if (entry.kind === 'file') {
-//         const file = await entry.getFile();
-//         if (file !== null) {
-//             file.relativePath = getRelativePath(entry);
-//             yield file;
-//         }
-//     } else if (entry.kind === 'directory') {
-//         for await (const handle of entry.values()) {
-//             yield* getFilesRecursively(handle);
-//         }
-//     }
-// }
+export function isFileSystemDirectoryHandle(
+  handle?: FileSystemHandle | null
+): handle is FileSystemDirectoryHandle {
+  return handle?.kind === 'directory';
+}
+
+export function isFileSystemFileHanle(
+  handle?: FileSystemHandle | null
+): handle is FileSystemFileHandle {
+  return handle?.kind === 'file';
+}
+
+const supportsFileSystemAccessAPI =
+  'getAsFileSystemHandle' in DataTransferItem.prototype;
+const supportsWebkitGetAsEntry =
+  'webkitGetAsEntry' in DataTransferItem.prototype;
+
+async function generatorToArray<T>(generator: AsyncIterable<T>): Promise<T[]> {
+  const items: T[] = [];
+  for await (const item of generator) items.push(item);
+  return items;
+}
