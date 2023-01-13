@@ -1,18 +1,18 @@
-export const parseDataTransferItem = async (
+export async function parseDataTransferItem(
   item: DataTransferItem
-): Promise<File[]> => {
-  // TODO: needs more investigation
-  // if (supportsFileSystemAccessAPI) {
-  //   return generatorToArray(
-  //     readFileHandlesRecursively(item.getAsFileSystemHandle())
-  //   );
-  // }
+): Promise<File[]> {
+  if (supportsFileSystemAccessAPI) {
+    // @ts-ignore not yet added to lib.dom.d.ts
+    const handle = await item.getAsFileSystemHandle();
+    if (handle) {
+      return readFileSystemHandlesAsync(handle);
+    }
+  }
 
   if (supportsWebkitGetAsEntry) {
-    // return readFileSystemEntryAsync(item.webkitGetAsEntry());
     const entry = item.webkitGetAsEntry();
     if (entry) {
-      return generatorToArray(readFileSystemEntryRecursively(entry));
+      return readFileSystemEntryAsync(entry);
     }
   }
 
@@ -22,23 +22,34 @@ export const parseDataTransferItem = async (
   }
 
   return [];
-};
+}
 
-async function* readFileHandlesRecursively(
+async function readFileSystemHandlesAsync(
+  entry: FileSystemHandle
+): Promise<File[]> {
+  return generatorToArray(readFileSystemHandlesRecursively(entry));
+}
+
+async function* readFileSystemHandlesRecursively(
   entry: FileSystemHandle
 ): AsyncGenerator<File> {
   if (isFileSystemFileHanle(entry)) {
     const file = await entry.getFile();
-    if (file !== null) {
-      // file.relativePath = getRelativePath(entry);
+    if (file) {
       yield file;
     }
   } else if (isFileSystemDirectoryHandle(entry)) {
-    const handles = (entry as any).values();
-    for await (const handle of handles) {
-      yield* readFileHandlesRecursively(handle);
+    // @ts-ignore not yet added to lib.dom.d.ts
+    for await (const handle of entry.values()) {
+      yield* readFileSystemHandlesRecursively(handle);
     }
   }
+}
+
+async function readFileSystemEntryAsync(
+  entry: FileSystemEntry
+): Promise<File[]> {
+  return generatorToArray(readFileSystemEntryRecursively(entry));
 }
 
 async function* readFileSystemEntryRecursively(
@@ -58,16 +69,22 @@ async function* readFileSystemEntryRecursively(
   }
 }
 
+async function generatorToArray<T>(generator: AsyncIterable<T>): Promise<T[]> {
+  const items: T[] = [];
+  for await (const item of generator) items.push(item);
+  return items;
+}
+
 export function isFileSystemDirectory(
   entry?: FileSystemEntry | null
 ): entry is FileSystemDirectoryEntry {
-  return !!entry && entry.isDirectory;
+  return entry?.isDirectory === true;
 }
 
 export function isFileSystemFile(
   entry?: FileSystemEntry | null
 ): entry is FileSystemFileEntry {
-  return !!entry && entry.isFile;
+  return entry?.isFile === true;
 }
 
 export function isFileSystemDirectoryHandle(
@@ -86,9 +103,3 @@ const supportsFileSystemAccessAPI =
   'getAsFileSystemHandle' in DataTransferItem.prototype;
 const supportsWebkitGetAsEntry =
   'webkitGetAsEntry' in DataTransferItem.prototype;
-
-async function generatorToArray<T>(generator: AsyncIterable<T>): Promise<T[]> {
-  const items: T[] = [];
-  for await (const item of generator) items.push(item);
-  return items;
-}
