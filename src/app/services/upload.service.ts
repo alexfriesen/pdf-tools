@@ -9,7 +9,7 @@ export class UploadService {
   private readonly document = inject(DOCUMENT);
   private readonly documentService = inject(DocumentService);
 
-  readonly acceptTypes: string[] = ['application/pdf'];
+  readonly acceptTypes: string[] = ['application/pdf', '.pdf'];
 
   input = this.createUploadElement();
 
