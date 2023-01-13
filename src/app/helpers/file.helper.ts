@@ -37,3 +37,19 @@ export const validateFileType = (file: File, acceptTypes: string[]) => {
 
   return !!matchedFileType;
 };
+
+export const validateFileSize = (
+  file: File,
+  minFileSize = 1,
+  maxFileSize?: number
+) => {
+  if (file.size < minFileSize) {
+    return false;
+  }
+
+  if (maxFileSize && file.size > maxFileSize) {
+    return false;
+  }
+
+  return true;
+};

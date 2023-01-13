@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
-import { validateFileType } from '../helpers/file.helper';
+import { validateFileSize, validateFileType } from '../helpers/file.helper';
 import { parseDataTransferItem } from '../helpers/filesystem.helper';
 import { DocumentService } from './document.service';
 
@@ -30,17 +30,9 @@ export class UploadService {
   }
 
   async addFileList(list: FileList) {
-    const files: File[] = [];
-
-    for (let i = 0; i < list.length; i++) {
-      const file = list.item(i);
-
-      if (!file) continue;
-
-      if (validateFileType(file, this.acceptTypes)) {
-        files.push(file);
-      }
-    }
+    const files: File[] = Array.from(list).filter(
+      (file) => file && this.validateFile(file)
+    );
 
     await this.addFiles(files);
   }
@@ -49,14 +41,9 @@ export class UploadService {
     const items = Array.from(list).filter((item) => item.kind === 'file');
     const fileChunks = await Promise.all(
       items.map(async (item) => {
-        const files = [];
-        const parsedFiles = await parseDataTransferItem(item);
-
-        for (const file of parsedFiles) {
-          if (validateFileType(file, this.acceptTypes)) {
-            files.push(file);
-          }
-        }
+        const files = (await parseDataTransferItem(item)).filter((file) =>
+          this.validateFile(file)
+        );
 
         return files;
       })
@@ -70,6 +57,10 @@ export class UploadService {
       const buffer = await file.arrayBuffer();
       await this.documentService.appendPDF(buffer);
     }
+  }
+
+  private validateFile(file: File) {
+    return validateFileType(file, this.acceptTypes) && validateFileSize(file);
   }
 
   private createUploadElement() {
