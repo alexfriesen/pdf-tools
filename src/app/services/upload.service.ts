@@ -30,32 +30,17 @@ export class UploadService {
   }
 
   async addFileList(list: FileList) {
-    const files: File[] = Array.from(list).filter(
-      (file) => file && this.validateFile(file)
-    );
+    const files: File[] = Array.from(list);
 
     await this.addFiles(files);
   }
 
-  async addDataTransferItemList(list: DataTransferItemList) {
-    const items = Array.from(list).filter((item) => item.kind === 'file');
-    const fileChunks = await Promise.all(
-      items.map(async (item) => {
-        const files = (await parseDataTransferItem(item)).filter((file) =>
-          this.validateFile(file)
-        );
-
-        return files;
-      })
-    );
-
-    await this.addFiles(fileChunks.flat());
-  }
-
   async addFiles(files: File[]) {
     for (const file of files) {
-      const buffer = await file.arrayBuffer();
-      await this.documentService.appendPDF(buffer);
+      if (this.validateFile(file)) {
+        const buffer = await file.arrayBuffer();
+        await this.documentService.appendPDF(buffer);
+      }
     }
   }
 
