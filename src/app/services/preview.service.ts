@@ -32,7 +32,7 @@ export class PreviewService {
         switchMap(async (buffer) => {
           if (!buffer) return null;
 
-          const task = getDocument(buffer);
+          const task = getDocument({ data: buffer });
           const doc = await task.promise;
 
           return Promise.all(
@@ -58,13 +58,12 @@ export class PreviewService {
     const canvas = document.createElement('canvas');
     const canvasContext = canvas.getContext('2d', {
       willReadFrequently: true,
-    });
+    })!;
 
     canvas.height = viewport.height;
     canvas.width = viewport.width;
-    const renderContext: any = { canvasContext, viewport };
 
-    const task = page.render(renderContext);
+    const task = page.render({ canvasContext, viewport });
     await task.promise;
 
     return {

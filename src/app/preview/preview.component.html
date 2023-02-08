@@ -9,20 +9,28 @@
   </div>
 </ng-template>
 
-<ng-container *ngIf="pages$ | async as pages; else empty">
-  <div cdkDropList class="list" (cdkDropListDropped)="onChangePosition($event)">
-    <div cdkDrag class="item" *ngFor="let page of pages">
-      <button
-        class="remove"
-        mat-mini-fab
-        color="warn"
-        (click)="onRemovePage(page)"
-      >
-        <mat-icon>delete</mat-icon>
-      </button>
-      <ng-container *ngIf="prewiewRenders$ | async as prewiews; else loading">
-        <img [src]="prewiews | preview : page" />
-      </ng-container>
-    </div>
+<div *ngIf="pages$ | async as pages; else empty">
+  <div
+    class="list"
+    cdkDropListGroup
+    mixedCdkDragDrop
+    orientation="horizontal"
+    (dropped)="onChangePosition($event)"
+  >
+    <span class="list" cdkDropList mixedCdkDropList *ngFor="let page of pages">
+      <div cdkDrag class="item">
+        <button
+          class="remove"
+          mat-mini-fab
+          color="warn"
+          (click)="onRemovePage(page)"
+        >
+          <mat-icon>delete</mat-icon>
+        </button>
+        <ng-container *ngIf="prewiewRenders$ | async as prewiews; else loading">
+          <img [src]="prewiews | preview : page" />
+        </ng-container>
+      </div>
+    </span>
   </div>
-</ng-container>
+</div>

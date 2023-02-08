@@ -18,11 +18,10 @@ mat-progress-spinner {
 }
 
 .list {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  justify-content: center;
-  margin: 1rem;
-  gap: 1rem;
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  box-sizing: border-box;
 }
 
 .item {
@@ -33,6 +32,10 @@ mat-progress-spinner {
   display: flex;
   align-items: center;
   justify-content: center;
+  box-sizing: border-box;
+
+  margin: 0.5rem;
+  max-width: 200px;
 
   &:hover {
     border-color: #3f51b5;
@@ -42,6 +45,7 @@ mat-progress-spinner {
     width: 100%;
     height: 100%;
     object-fit: contain;
+    pointer-events: none;
   }
 }
 

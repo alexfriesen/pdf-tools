@@ -4,7 +4,8 @@ import { TranslocoModule } from '@ngneat/transloco';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { CdkDragDrop, DragDropModule } from '@angular/cdk/drag-drop';
+import { DragDropModule } from '@angular/cdk/drag-drop';
+import { MixedCdkDragDropModule } from 'angular-mixed-cdk-drag-drop';
 import { switchMap } from 'rxjs';
 import { getDocument } from 'pdfjs-dist';
 
@@ -24,6 +25,7 @@ import { PreviewPipe } from '../pipes/preview.pipe';
     MatButtonModule,
     MatProgressSpinnerModule,
     DragDropModule,
+    MixedCdkDragDropModule,
     TranslocoModule,
     PreviewPipe,
   ],
@@ -46,7 +48,10 @@ export class PreviewComponent {
     })
   );
 
-  async onChangePosition(event: CdkDragDrop<string[]>) {
+  async onChangePosition(event: {
+    previousIndex: number;
+    currentIndex: number;
+  }) {
     await this.documentService.swapPages(
       event.currentIndex,
       event.previousIndex

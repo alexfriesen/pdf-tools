@@ -23,6 +23,7 @@
     "@ngneat/elf": "^2.3.0",
     "@ngneat/elf-entities": "^4.4.3",
     "@ngneat/transloco": "^4.1.1",
+    "angular-mixed-cdk-drag-drop": "^2.0.0",
     "pdf-lib": "^1.17.1",
     "pdfjs-dist": "~3.1.0",
     "rxjs": "^7.5.0",
