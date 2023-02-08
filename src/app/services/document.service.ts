@@ -37,7 +37,6 @@ export class DocumentService {
     await this.updatePreview();
   }
 
-  // TODO: very unpredictable
   async swapPages(pageIndex1: number, pageIndex2: number) {
     if (!this.document) return;
 
