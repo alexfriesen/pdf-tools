@@ -34,6 +34,8 @@
     "@angular-devkit/build-angular": "^15.1.0",
     "@angular/cli": "^15.1.0",
     "@angular/compiler-cli": "^15.1.0",
+    "@fontsource/material-icons": "^4.5.4",
+    "@fontsource/roboto": "^4.5.8",
     "typescript": "~4.9.0"
   }
 }
