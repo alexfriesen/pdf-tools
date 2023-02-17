@@ -1,4 +1,10 @@
 {
+  "about": {
+    "title": "Über PDF-Tools",
+    "description": "PDF-Tools bietet eine Reihe von kleinen Werkzeugen zur Bearbeitung von PDF-Dateien",
+    "link": "Über"
+  },
+  "close": "schließen",
   "drop here": "Wirf hier deine PDF Dateien herein",
   "pick file": "PDF-Datei auswählen",
   "download": "Herunterladen",
