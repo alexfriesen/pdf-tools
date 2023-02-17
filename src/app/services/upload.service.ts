@@ -1,7 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
 import { validateFileSize, validateFileType } from '../helpers/file.helper';
-import { parseDataTransferItem } from '../helpers/filesystem.helper';
 import { DocumentService } from './document.service';
 
 @Injectable({ providedIn: 'root' })

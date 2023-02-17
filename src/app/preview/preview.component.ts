@@ -52,9 +52,9 @@ export class PreviewComponent {
     previousIndex: number;
     currentIndex: number;
   }) {
-    await this.documentService.swapPages(
-      event.currentIndex,
-      event.previousIndex
+    await this.documentService.movePage(
+      event.previousIndex,
+      event.currentIndex
     );
   }
 

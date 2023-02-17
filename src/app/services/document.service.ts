@@ -37,6 +37,25 @@ export class DocumentService {
     await this.updatePreview();
   }
 
+  async movePage(oldIndex: number, newIndex: number) {
+    if (!this.document) return;
+
+    const [page] = await this.document.copyPages(this.document, [oldIndex]);
+
+    if (newIndex > oldIndex) {
+      await this.document.removePage(oldIndex);
+    }
+
+    await this.document.insertPage(newIndex, page);
+
+    if (newIndex < oldIndex) {
+      // the copied page was added, so we need increase the index
+      await this.document.removePage(oldIndex + 1);
+    }
+
+    await this.updatePreview();
+  }
+
   async swapPages(pageIndex1: number, pageIndex2: number) {
     if (!this.document) return;
 
