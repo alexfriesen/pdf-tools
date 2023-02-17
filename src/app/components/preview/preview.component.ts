@@ -1,5 +1,5 @@
 import { Component, ChangeDetectionStrategy, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { AsyncPipe, NgFor, NgIf } from '@angular/common';
 import { TranslocoModule } from '@ngneat/transloco';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
@@ -10,8 +10,8 @@ import { switchMap } from 'rxjs';
 import { getDocument } from 'pdfjs-dist';
 
 import { DocumentService } from '@app/services/document.service';
-import { PreviewService } from '../services/preview.service';
-import { PreviewPipe } from '../pipes/preview.pipe';
+import { PreviewService } from '@app/services/preview.service';
+import { PreviewPipe } from '@app/pipes/preview.pipe';
 
 @Component({
   selector: 'app-preview',
@@ -20,7 +20,9 @@ import { PreviewPipe } from '../pipes/preview.pipe';
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
   imports: [
-    CommonModule,
+    NgIf,
+    NgFor,
+    AsyncPipe,
     MatIconModule,
     MatButtonModule,
     MatProgressSpinnerModule,
@@ -34,10 +36,8 @@ export class PreviewComponent {
   private readonly documentService = inject(DocumentService);
   private readonly previewService = inject(PreviewService);
 
-  readonly isProcessing$ = this.previewService.isPocessing$;
   readonly prewiewRenders$ = this.previewService.pagesPreviews$;
-
-  pages$ = this.documentService.documentBuffer$.pipe(
+  readonly pages$ = this.documentService.documentBuffer$.pipe(
     switchMap(async (buffer) => {
       if (!buffer) return undefined;
 

@@ -1,4 +1,10 @@
 {
+  "about": {
+    "title": "About PDF-Tools",
+    "description": "PDF-Tools is a set of small tools for editing PDF files",
+    "link": "About"
+  },
+  "close": "close",
   "drop here": "Drop in some PDF-Files",
   "pick file": "Pick a PDF-File",
   "download": "Download",

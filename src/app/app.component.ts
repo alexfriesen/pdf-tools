@@ -6,8 +6,8 @@ import {
 } from '@angular/core';
 
 import { UploadService } from '@app/services/upload.service';
-import { PreviewComponent } from '@app/preview/preview.component';
-import { HeaderComponent } from '@app/header/header.component';
+import { PreviewComponent } from '@app/components/preview/preview.component';
+import { HeaderComponent } from '@app/components/header/header.component';
 import { DropAreaDirective } from '@app/directives/drop-area.directive';
 
 @Component({
