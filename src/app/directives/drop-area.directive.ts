@@ -1,5 +1,5 @@
 import { Directive, EventEmitter, HostListener, Output } from '@angular/core';
-import { parseDataTransferItem } from '../helpers/filesystem.helper';
+import { parseFilesFromEvent } from 'data-transfer-helper';
 
 @Directive({
   selector: '[drop-area]',
@@ -17,15 +17,8 @@ export class DropAreaDirective {
     this.stopEvent(event);
     this.hovering.emit(false);
 
-    const list = event.dataTransfer?.items;
-    if (list) {
-      const items = Array.from(list).filter((item) => item.kind === 'file');
-      const fileChunks = await Promise.all(
-        items.map(async (item) => parseDataTransferItem(item))
-      );
-      const files = fileChunks.flat();
-      this.filesDropped.emit(files);
-    }
+    const files = await parseFilesFromEvent(event);
+    this.filesDropped.emit(files);
   }
 
   @HostListener('dragover', ['$event'])
