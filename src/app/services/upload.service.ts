@@ -53,7 +53,7 @@ export class UploadService {
     element.type = 'file';
     element.multiple = true;
     // element.webkitdirectory = true;
-    element.accept = this.acceptTypes.join('|');
+    element.accept = this.acceptTypes.join(',');
     element.onchange = (event) => this.onFileChange(event);
 
     this.document.body.appendChild(element);
