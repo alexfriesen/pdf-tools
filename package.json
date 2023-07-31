@@ -22,7 +22,7 @@
     "@angular/router": "^16.0.0",
     "@ngneat/elf": "^2.3.0",
     "@ngneat/elf-entities": "^4.4.3",
-    "@ngneat/transloco": "^4.1.1",
+    "@ngneat/transloco": "^5.0.1",
     "angular-mixed-cdk-drag-drop": "^2.0.0",
     "data-transfer-helper": "^1.0.2",
     "pdf-lib": "^1.17.1",
@@ -37,6 +37,6 @@
     "@angular/compiler-cli": "^16.0.0",
     "@fontsource/material-icons": "^4.5.4",
     "@fontsource/roboto": "^5.0.0",
-    "typescript": "~5.0.0"
+    "typescript": "~5.1.0"
   }
 }
