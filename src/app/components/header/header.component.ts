@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { AsyncPipe, NgIf } from '@angular/common';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
@@ -19,8 +19,6 @@ import { AboutComponent } from '@app/components/about/about.component';
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
   imports: [
-    NgIf,
-    AsyncPipe,
     MatIconModule,
     MatButtonModule,
     MatDialogModule,
@@ -34,16 +32,16 @@ export class HeaderComponent {
   private readonly previewService = inject(PreviewService);
   private readonly documentService = inject(DocumentService);
 
-  readonly isProcessing$ = this.previewService.isPocessing$;
-  readonly canDownload$ = this.documentService.documentBuffer$.pipe(
-    map((document) => !!document)
+  readonly isProcessing = toSignal(this.previewService.isPocessing$);
+  readonly canDownload = toSignal(
+    this.documentService.documentBuffer$.pipe(map((document) => !!document))
   );
 
   async onDownloadFile() {
     await this.documentService.save('new');
   }
 
-  onOpenFilePromt() {
+  onOpenFilePrompt() {
     this.uploadService.openFilePrompt();
   }
 

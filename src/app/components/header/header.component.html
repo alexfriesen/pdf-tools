@@ -1,37 +1,34 @@
 <header>
-  <button mat-fab extended color="accent" (click)="onOpenFilePromt()">
+  <button mat-fab extended color="accent" (click)="onOpenFilePrompt()">
     <mat-icon>attach_file</mat-icon>
     {{ 'pick file' | transloco }}
   </button>
 
-  <button
-    mat-fab
-    extended
-    color="primary"
-    *ngIf="canDownload$ | async"
-    (click)="onDownloadFile()"
-  >
-    <mat-icon>download</mat-icon>
-    {{ 'download' | transloco }}
-  </button>
+  @if (canDownload()) {
+    <button mat-fab extended color="primary" (click)="onDownloadFile()">
+      <mat-icon>download</mat-icon>
+      {{ 'download' | transloco }}
+    </button>
+  }
 
   <button mat-button color="primary" (click)="onOpenAbout()">
     <mat-icon>info</mat-icon>
     {{ 'about.link' | transloco }}
   </button>
 
-  <mat-progress-bar
-    mode="indeterminate"
-    *ngIf="isProcessing$ | async"
-  ></mat-progress-bar>
+  @if (isProcessing()) {
+    <mat-progress-bar mode="indeterminate" />
+  }
 </header>
 
-<div class="actions" *ngIf="canDownload$ | async">
-  <button mat-mini-fab (click)="onOpenFilePromt()">
-    <mat-icon>attach_file</mat-icon>
-  </button>
+@if (canDownload()) {
+  <div class="actions">
+    <button mat-mini-fab (click)="onOpenFilePrompt()">
+      <mat-icon>attach_file</mat-icon>
+    </button>
 
-  <button mat-fab color="primary" (click)="onDownloadFile()">
-    <mat-icon>download</mat-icon>
-  </button>
-</div>
+    <button mat-fab color="primary" (click)="onDownloadFile()">
+      <mat-icon>download</mat-icon>
+    </button>
+  </div>
+}

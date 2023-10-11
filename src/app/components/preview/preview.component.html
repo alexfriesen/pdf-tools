@@ -1,36 +1,37 @@
-<ng-template #loading>
-  <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
-</ng-template>
+@if(pages(); as pages) {
+  <div>
+    <div
+      class="list"
+      cdkDropListGroup
+      mixedCdkDragDrop
+      orientation="horizontal"
+      (dropped)="onChangePosition($event)"
+    >
+      @for (page of pages; track page) {
+        <span class="list" cdkDropList mixedCdkDropList>
+          <div cdkDrag class="item">
+            <button
+              class="remove"
+              mat-mini-fab
+              color="warn"
+              (click)="onRemovePage(page)"
+            >
+              <mat-icon>delete</mat-icon>
+            </button>
 
-<ng-template #empty>
+            @if(previewRenders(); as previews) {
+              <img [src]="previews | preview : page" />
+            } @else {
+              <mat-progress-spinner mode="indeterminate" />
+            }
+          </div>
+        </span>
+      } @empty {}
+    </div>
+  </div>
+} @else {
   <div class="empty">
     <mat-icon color="accent">cloud_upload</mat-icon>
-    <p class="mat-headline-3">{{ "drop here" | transloco }}</p>
+    <p class="mat-headline-3">{{ 'drop here' | transloco }}</p>
   </div>
-</ng-template>
-
-<div *ngIf="pages$ | async as pages; else empty">
-  <div
-    class="list"
-    cdkDropListGroup
-    mixedCdkDragDrop
-    orientation="horizontal"
-    (dropped)="onChangePosition($event)"
-  >
-    <span class="list" cdkDropList mixedCdkDropList *ngFor="let page of pages">
-      <div cdkDrag class="item">
-        <button
-          class="remove"
-          mat-mini-fab
-          color="warn"
-          (click)="onRemovePage(page)"
-        >
-          <mat-icon>delete</mat-icon>
-        </button>
-        <ng-container *ngIf="prewiewRenders$ | async as prewiews; else loading">
-          <img [src]="prewiews | preview : page" />
-        </ng-container>
-      </div>
-    </span>
-  </div>
-</div>
+}
