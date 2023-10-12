@@ -1,0 +1,14 @@
+:host {
+  display: grid;
+}
+
+mat-progress-spinner {
+  margin: 2rem;
+}
+
+img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  pointer-events: none;
+}

@@ -14,7 +14,7 @@ import { TranslocoModule } from '@ngneat/transloco';
 
 import { DocumentService } from '@app/services/document.service';
 import { PreviewService } from '@app/services/preview.service';
-import { PreviewPipe } from '@app/pipes/preview.pipe';
+import { ThumbnailComponent } from '../thumb/thumb.component';
 
 @Component({
   selector: 'app-preview',
@@ -29,7 +29,8 @@ import { PreviewPipe } from '@app/pipes/preview.pipe';
     DragDropModule,
     MixedCdkDragDropModule,
     TranslocoModule,
-    PreviewPipe,
+
+    ThumbnailComponent,
   ],
 })
 export class PreviewComponent {

@@ -1,5 +1,5 @@
 import { inject, Injectable, signal } from '@angular/core';
-import { BehaviorSubject, debounceTime, switchMap, tap } from 'rxjs';
+import { switchMap, tap } from 'rxjs';
 import {
   getDocument,
   GlobalWorkerOptions,
@@ -27,32 +27,29 @@ export class PreviewService {
 
     this.documentService.documentBuffer$
       .pipe(
-        debounceTime(100),
         tap(() => this.isProcessing.set(true)),
-        switchMap(async (buffer) => this.generatePagePreviews(buffer)),
-        tap((data) => this.pagesPreviews.set(data)),
+        switchMap((buffer) => this.generatePagePreviews(buffer)),
         tap(() => this.isProcessing.set(false))
       )
       .subscribe();
   }
 
   private async generatePagePreviews(buffer: Uint8Array | null) {
-    if (!buffer) return null;
+    if (!buffer) return false;
 
     const task = getDocument({ data: buffer });
     const doc = await task.promise;
 
-    return Promise.all(
+    await Promise.all(
       Array.from(Array(doc.numPages).keys()).map((pageNumber) =>
         this.renderPagePreview(doc, pageNumber)
       )
     );
+
+    return true;
   }
 
-  private async renderPagePreview(
-    doc: PDFDocumentProxy,
-    pageIndex: number
-  ): Promise<PagePreview> {
+  private async renderPagePreview(doc: PDFDocumentProxy, pageIndex: number) {
     const page = await doc.getPage(pageIndex + 1);
 
     const viewport = page.getViewport({ scale: 0.5 });
@@ -60,6 +57,7 @@ export class PreviewService {
     const canvas = document.createElement('canvas');
     const canvasContext = canvas.getContext('2d', {
       willReadFrequently: true,
+      alpha: false,
     })!;
 
     canvas.height = viewport.height;
@@ -68,9 +66,23 @@ export class PreviewService {
     const task = page.render({ canvasContext, viewport });
     await task.promise;
 
-    return {
+    const base64 = canvas.toDataURL();
+    page.cleanup();
+
+    const data = {
       pageIndex,
-      base64: canvas.toDataURL(),
+      base64,
     };
+
+    this.addOrReplacePreview(data);
+  }
+
+  private async addOrReplacePreview(entry: PagePreview) {
+    this.pagesPreviews.update((data) => {
+      if (!data) return [entry];
+
+      const filteredData = data?.filter((p) => p.pageIndex !== entry.pageIndex);
+      return [...filteredData, entry];
+    });
   }
 }

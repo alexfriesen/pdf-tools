@@ -19,11 +19,7 @@
               <mat-icon>delete</mat-icon>
             </button>
 
-            @if(previewRenders(); as previews) {
-              <img [src]="previews | preview : page" />
-            } @else {
-              <mat-progress-spinner mode="indeterminate" />
-            }
+            <app-thumb [pageIndex]="page" />
           </div>
         </span>
       } @empty {}
