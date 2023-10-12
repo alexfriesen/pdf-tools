@@ -1,4 +1,4 @@
-import { inject, Injectable } from '@angular/core';
+import { inject, Injectable, signal } from '@angular/core';
 import { BehaviorSubject, debounceTime, switchMap, tap } from 'rxjs';
 import {
   getDocument,
@@ -17,9 +17,9 @@ export interface PagePreview {
 @Injectable({ providedIn: 'root' })
 export class PreviewService {
   private readonly documentService = inject(DocumentService);
-  readonly isPocessing$ = new BehaviorSubject(false);
+  readonly isProcessing = signal(false);
 
-  readonly pagesPreviews$ = new BehaviorSubject<PagePreview[] | null>(null);
+  readonly pagesPreviews = signal<PagePreview[] | null>(null);
 
   constructor() {
     const pdfWorkerSrc = `https://cdn.jsdelivr.net/npm/pdfjs-dist@${version}/build/pdf.worker.min.js`;
@@ -28,23 +28,25 @@ export class PreviewService {
     this.documentService.documentBuffer$
       .pipe(
         debounceTime(100),
-        tap(() => this.isPocessing$.next(true)),
-        switchMap(async (buffer) => {
-          if (!buffer) return null;
-
-          const task = getDocument({ data: buffer });
-          const doc = await task.promise;
-
-          return Promise.all(
-            Array.from(Array(doc.numPages).keys()).map((pageNumber) =>
-              this.renderPagePreview(doc, pageNumber)
-            )
-          );
-        }),
-        tap((data) => this.pagesPreviews$.next(data)),
-        tap(() => this.isPocessing$.next(false))
+        tap(() => this.isProcessing.set(true)),
+        switchMap(async (buffer) => this.generatePagePreviews(buffer)),
+        tap((data) => this.pagesPreviews.set(data)),
+        tap(() => this.isProcessing.set(false))
       )
       .subscribe();
+  }
+
+  private async generatePagePreviews(buffer: Uint8Array | null) {
+    if (!buffer) return null;
+
+    const task = getDocument({ data: buffer });
+    const doc = await task.promise;
+
+    return Promise.all(
+      Array.from(Array(doc.numPages).keys()).map((pageNumber) =>
+        this.renderPagePreview(doc, pageNumber)
+      )
+    );
   }
 
   private async renderPagePreview(

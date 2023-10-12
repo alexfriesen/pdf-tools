@@ -1,16 +1,22 @@
 import { Injectable } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { PDFDocument } from 'pdf-lib';
-import { Subject } from 'rxjs';
+import { Subject, map } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class DocumentService {
   document: PDFDocument | undefined;
 
   readonly documentBuffer$ = new Subject<Uint8Array | null>();
+  readonly documentBuffer = toSignal(this.documentBuffer$);
+
+  readonly pageCount$ = this.documentBuffer$.pipe(
+    map(() => this.document?.getPageCount() || 0)
+  );
 
   async loadPDF(pdfBuffer: ArrayBuffer) {
     this.document = await PDFDocument.load(pdfBuffer);
-    await this.updatePreview();
+    await this.updateDocumentBuffer();
   }
 
   async appendPDF(pdfBuffer: ArrayBuffer) {
@@ -25,7 +31,7 @@ export class DocumentService {
       this.document.addPage(page);
     }
 
-    await this.updatePreview();
+    await this.updateDocumentBuffer();
   }
 
   async removePage(pageIndex: number) {
@@ -34,7 +40,7 @@ export class DocumentService {
     } else {
       delete this.document;
     }
-    await this.updatePreview();
+    await this.updateDocumentBuffer();
   }
 
   async movePage(oldIndex: number, newIndex: number) {
@@ -53,7 +59,7 @@ export class DocumentService {
       await this.document.removePage(oldIndex + 1);
     }
 
-    await this.updatePreview();
+    await this.updateDocumentBuffer();
   }
 
   async swapPages(pageIndex1: number, pageIndex2: number) {
@@ -69,7 +75,7 @@ export class DocumentService {
     await this.document.removePage(pageIndex1);
     await this.document.insertPage(pageIndex1, page2);
 
-    await this.updatePreview();
+    await this.updateDocumentBuffer();
   }
 
   async save(fileName: string) {
@@ -79,7 +85,7 @@ export class DocumentService {
     this.downloadAs(dataUri, `${fileName}.pdf`);
   }
 
-  async updatePreview() {
+  async updateDocumentBuffer() {
     const buffer = (await this.document?.save()) || null;
     this.documentBuffer$.next(buffer);
   }

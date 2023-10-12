@@ -1,11 +1,14 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  inject,
+} from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { TranslocoModule } from '@ngneat/transloco';
-import { map } from 'rxjs';
 
 import { UploadService } from '@app/services/upload.service';
 import { PreviewService } from '@app/services/preview.service';
@@ -32,10 +35,11 @@ export class HeaderComponent {
   private readonly previewService = inject(PreviewService);
   private readonly documentService = inject(DocumentService);
 
-  readonly isProcessing = toSignal(this.previewService.isPocessing$);
-  readonly canDownload = toSignal(
-    this.documentService.documentBuffer$.pipe(map((document) => !!document))
-  );
+  readonly isProcessing = this.previewService.isProcessing;
+  readonly canDownload = computed(() => {
+    const document = this.documentService.documentBuffer();
+    return !!document;
+  });
 
   async onDownloadFile() {
     await this.documentService.save('new');
