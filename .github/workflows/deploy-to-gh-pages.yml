@@ -25,4 +25,4 @@ jobs:
       - name: Deploy
         uses: JamesIves/github-pages-deploy-action@v4
         with:
-          FOLDER: dist/pdf-tools
+          FOLDER: dist/pdf-tools/browser
