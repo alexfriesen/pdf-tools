@@ -1,33 +1,48 @@
 <header>
-  <button mat-fab extended color="accent" (click)="onOpenFilePrompt()">
-    <mat-icon>attach_file</mat-icon>
-    {{ 'pick file' | transloco }}
-  </button>
+  <mat-toolbar color="primary">
+    <span>PDF Tools</span>
+    <div class="end">
+      @if (!hasDocument()) {
+        <button mat-fab extended color="accent" (click)="onOpenFilePrompt()">
+          <mat-icon>attach_file</mat-icon>
+          {{ 'pick file' | transloco }}
+        </button>
+      }
 
-  @if (canDownload()) {
-    <button mat-fab extended color="primary" (click)="onDownloadFile()">
-      <mat-icon>download</mat-icon>
-      {{ 'download' | transloco }}
-    </button>
-  }
+      @if (hasDocument()) {
+        <button mat-icon-button [matTooltip]="'add file' | transloco" (click)="onOpenFilePrompt()">
+          <mat-icon>add</mat-icon>
+        </button>
 
-  <button mat-button color="primary" (click)="onOpenAbout()">
-    <mat-icon>info</mat-icon>
-    {{ 'about.link' | transloco }}
-  </button>
+        <button mat-icon-button [matTooltip]="'download' | transloco" (click)="onDownloadFile()">
+          <mat-icon>download</mat-icon>
+        </button>
+      }
+
+      <button mat-icon-button [matMenuTriggerFor]="moreMenu">
+        <mat-icon>more_vert</mat-icon>
+      </button>
+      <mat-menu #moreMenu="matMenu">
+        <button mat-menu-item (click)="onOpenAbout()">
+          <mat-icon>info</mat-icon>
+          {{ 'about.link' | transloco }}
+        </button>
+      </mat-menu>
+    </div>
+  </mat-toolbar>
 
   @if (isProcessing()) {
     <mat-progress-bar mode="indeterminate" />
   }
 </header>
 
-@if (canDownload()) {
+@if (hasDocument()) {
   <div class="actions">
-    <button mat-mini-fab (click)="onOpenFilePrompt()">
-      <mat-icon>attach_file</mat-icon>
+    <button mat-mini-fab [matTooltip]="'add file' | transloco" (click)="onOpenFilePrompt()">
+      <mat-icon>add</mat-icon>
     </button>
 
-    <button mat-fab color="primary" (click)="onDownloadFile()">
+    <button mat-fab color="primary" [matTooltip]="'download' | transloco" (click)="onDownloadFile()">
       <mat-icon>download</mat-icon>
     </button>
   </div>

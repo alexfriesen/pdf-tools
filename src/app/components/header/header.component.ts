@@ -4,10 +4,13 @@ import {
   computed,
   inject,
 } from '@angular/core';
-import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
-import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { MatDialogModule, MatDialog } from '@angular/material/dialog';
+import { MatIconModule } from '@angular/material/icon';
+import { MatMenuModule } from '@angular/material/menu';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { TranslocoModule } from '@ngneat/transloco';
 
 import { UploadService } from '@app/services/upload.service';
@@ -22,10 +25,13 @@ import { AboutComponent } from '@app/components/about/about.component';
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
   imports: [
-    MatIconModule,
     MatButtonModule,
     MatDialogModule,
+    MatIconModule,
+    MatMenuModule,
     MatProgressBarModule,
+    MatToolbarModule,
+    MatTooltipModule,
     TranslocoModule,
   ],
 })
@@ -36,7 +42,7 @@ export class HeaderComponent {
   private readonly documentService = inject(DocumentService);
 
   readonly isProcessing = this.previewService.isProcessing;
-  readonly canDownload = computed(() => {
+  readonly hasDocument = computed(() => {
     const document = this.documentService.documentBuffer();
     return !!document;
   });

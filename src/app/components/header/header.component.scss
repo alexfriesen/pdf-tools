@@ -9,8 +9,14 @@ footer {
   flex: 0 1 auto;
   align-items: center;
   justify-content: space-between;
+}
 
-  margin: 1rem;
+.end {
+  display: flex;
+  flex: 1 1 auto;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 1rem;
 }
 
 mat-progress-bar {
