@@ -4,7 +4,21 @@
     "description": "PDF-Tools bietet eine Reihe von kleinen Werkzeugen zur Bearbeitung von PDF-Dateien",
     "link": "Über"
   },
-  "close": "schließen",
+  "properties": {
+    "title": "Dokumenteigenschaften",
+    "link": "Dokumenteigenschaften",
+    "document": {
+      "title": "Titel",
+      "author": "Autor",
+      "subject": "Thema",
+      "keywords": "Stichwörter",
+      "creator": "Anwendung",
+      "creationDate": "Erstellt am",
+      "modificationDate": "Geändert am"
+    }
+  },
+  "save": "Speichern",
+  "close": "Schließen",
   "drop here": "Wirf hier deine PDF Dateien herein",
   "pick file": "PDF-Datei auswählen",
   "add file": "PDF-Datei hinzufügen",

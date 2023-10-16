@@ -23,6 +23,13 @@
         <mat-icon>more_vert</mat-icon>
       </button>
       <mat-menu #moreMenu="matMenu">
+        @if (hasDocument()) {
+          <button mat-menu-item (click)="onOpenProperties()">
+            <mat-icon>properties</mat-icon>
+            {{ 'properties.link' | transloco }}
+          </button>
+        }
+
         <button mat-menu-item (click)="onOpenAbout()">
           <mat-icon>info</mat-icon>
           {{ 'about.link' | transloco }}

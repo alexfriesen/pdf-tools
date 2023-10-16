@@ -3,6 +3,8 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { PDFDocument } from 'pdf-lib';
 import { Subject, map } from 'rxjs';
 
+import { Metadata } from '../types/metadata';
+
 @Injectable({ providedIn: 'root' })
 export class DocumentService {
   document: PDFDocument | undefined;
@@ -60,6 +62,26 @@ export class DocumentService {
     }
 
     await this.updateDocumentBuffer();
+  }
+
+  getMetadata() {
+    return {
+      title: this.document?.getTitle(),
+      author: this.document?.getAuthor(),
+      creator: this.document?.getCreator(),
+      subject: this.document?.getSubject(),
+      keywords: this.document?.getKeywords(),
+      producer: this.document?.getProducer(),
+      creationDate: this.document?.getCreationDate(),
+      modificationDate: this.document?.getModificationDate(),
+    };
+  }
+
+  setMetadata(metadata: Metadata) {
+    this.document?.setTitle(metadata.title);
+    this.document?.setAuthor(metadata.author);
+    this.document?.setSubject(metadata.subject);
+    this.document?.setKeywords((metadata.keywords || '').split(' '));
   }
 
   async swapPages(pageIndex1: number, pageIndex2: number) {

@@ -12,4 +12,12 @@ export class LazyDialogService {
 
     return this.dialog.open(component.AboutDialogComponent);
   }
+
+  async openPropertiesDialog(data: any) {
+    const component = await import(
+      '../components/properties-dialog/properties-dialog.component'
+    );
+
+    return this.dialog.open(component.PropertiesDialogComponent, { data });
+  }
 }

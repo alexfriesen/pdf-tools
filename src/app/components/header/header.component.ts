@@ -11,6 +11,7 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { TranslocoModule } from '@ngneat/transloco';
+import { firstValueFrom } from 'rxjs';
 
 import { UploadService } from '@app/services/upload.service';
 import { PreviewService } from '@app/services/preview.service';
@@ -55,5 +56,17 @@ export class HeaderComponent {
 
   async onOpenAbout() {
     await this.lazyDialogService.openAboutDialog();
+  }
+
+  async onOpenProperties() {
+    const ref = await this.lazyDialogService.openPropertiesDialog(
+      this.documentService.getMetadata()
+    );
+
+    const data = await firstValueFrom(ref.afterClosed());
+
+    if (data) {
+      this.documentService.setMetadata(data);
+    }
   }
 }

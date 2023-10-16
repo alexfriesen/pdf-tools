@@ -1,0 +1,66 @@
+<h2 mat-dialog-title>
+  {{ 'properties.title' | transloco }}
+</h2>
+
+<form [formGroup]="form">
+  <mat-dialog-content>
+    <div class="flex-column">
+      <mat-form-field>
+        <mat-label>{{ 'properties.document.title' | transloco }}</mat-label>
+        <input matInput formControlName="title" />
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>{{ 'properties.document.author' | transloco }}</mat-label>
+        <input matInput formControlName="author" />
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>{{ 'properties.document.subject' | transloco }}</mat-label>
+        <input matInput formControlName="subject" />
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>{{ 'properties.document.keywords' | transloco }}</mat-label>
+        <input matInput formControlName="keywords" />
+      </mat-form-field>
+
+      <table>
+        <tr>
+          <td>{{ 'properties.document.creationDate' | transloco }}:</td>
+          <td>
+            {{ data.creationDate | date : 'short' }}
+          </td>
+        </tr>
+        <tr>
+          <td>{{ 'properties.document.modificationDate' | transloco }}:</td>
+          <td>
+            {{ data.modificationDate | date : 'short' }}
+          </td>
+        </tr>
+        <tr>
+          <td>{{ 'properties.document.creator' | transloco }}:</td>
+          <td>
+            {{ data.creator }}
+          </td>
+        </tr>
+        <!-- <tr>
+          <td>
+            {{ 'properties.document.producer' | transloco }}:
+          </td>
+          <td>
+            {{ data.producer }}
+          </td>
+        </tr> -->
+      </table>
+    </div>
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end">
+    <button
+      mat-flat-button
+      color="accent"
+      [disabled]="form.invalid"
+      [mat-dialog-close]="form.value"
+    >
+      {{ 'save' | transloco }}
+    </button>
+  </mat-dialog-actions>
+</form>
