@@ -11,6 +11,11 @@ footer {
   justify-content: space-between;
 }
 
+.title {
+  display: flex;
+  align-items: center;
+}
+
 .end {
   display: flex;
   flex: 1 1 auto;
