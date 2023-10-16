@@ -4,6 +4,20 @@
     "description": "PDF-Tools is a set of small tools for editing PDF files",
     "link": "About"
   },
+  "properties": {
+    "title": "Document Properties",
+    "link": "Properties",
+    "document": {
+      "title": "Title",
+      "author": "Author",
+      "subject": "Subject",
+      "keywords": "Keywords",
+      "creator": "Application",
+      "creationDate": "Created at",
+      "modificationDate": "Changed at"
+    }
+  },
+  "save": "Save",
   "close": "close",
   "drop here": "Drop in some PDF-Files",
   "pick file": "Pick a PDF-File",
