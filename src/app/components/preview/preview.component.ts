@@ -1,6 +1,6 @@
 import { Component, ChangeDetectionStrategy, inject } from '@angular/core';
 
-import { DocumentService } from '@app/services/document.service';
+import { StoreService } from '@app/services/store.service';
 import { EmptyComponent } from '../empty/empty.component';
 import { PagesComponent } from '../pages/pages.component';
 
@@ -13,5 +13,5 @@ import { PagesComponent } from '../pages/pages.component';
   imports: [EmptyComponent, PagesComponent],
 })
 export class PreviewComponent {
-  readonly hasDocument = inject(DocumentService).hasDocument;
+  readonly hasDocument = inject(StoreService).hasDocument;
 }

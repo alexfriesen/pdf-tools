@@ -1,4 +1,5 @@
 import { inject, Injectable, signal } from '@angular/core';
+import { toObservable } from '@angular/core/rxjs-interop';
 import { switchMap, tap } from 'rxjs';
 import {
   getDocument,
@@ -7,7 +8,7 @@ import {
   version,
 } from 'pdfjs-dist';
 
-import { DocumentService } from './document.service';
+import { StoreService } from './store.service';
 
 export interface PagePreview {
   pageIndex: number;
@@ -16,8 +17,7 @@ export interface PagePreview {
 
 @Injectable({ providedIn: 'root' })
 export class PreviewService {
-  private readonly documentService = inject(DocumentService);
-  readonly isProcessing = signal(false);
+  private readonly storeService = inject(StoreService);
 
   readonly pagesPreviews = signal<PagePreview[] | null>(null);
 
@@ -25,11 +25,11 @@ export class PreviewService {
     const pdfWorkerSrc = `https://cdn.jsdelivr.net/npm/pdfjs-dist@${version}/build/pdf.worker.min.js`;
     GlobalWorkerOptions.workerSrc = pdfWorkerSrc;
 
-    this.documentService.documentBuffer$
+    toObservable(this.storeService.documentBuffer)
       .pipe(
-        tap(() => this.isProcessing.set(true)),
+        tap(() => this.storeService.pageRenderingProcessing.set(true)),
         switchMap((buffer) => this.generatePagePreviews(buffer)),
-        tap(() => this.isProcessing.set(false))
+        tap(() => this.storeService.pageRenderingProcessing.set(false))
       )
       .subscribe();
   }

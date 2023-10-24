@@ -1,4 +1,9 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  inject,
+} from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
@@ -7,8 +12,8 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { TranslocoPipe } from '@ngneat/transloco';
 
+import { StoreService } from '@app/services/store.service';
 import { UploadService } from '@app/services/upload.service';
-import { PreviewService } from '@app/services/preview.service';
 import { DocumentService } from '@app/services/document.service';
 import { LazyDialogService } from '@app/services/lazy-dialog.service';
 
@@ -29,13 +34,19 @@ import { LazyDialogService } from '@app/services/lazy-dialog.service';
   ],
 })
 export class HeaderComponent {
+  private readonly storeService = inject(StoreService);
   private readonly uploadService = inject(UploadService);
-  private readonly previewService = inject(PreviewService);
   private readonly documentService = inject(DocumentService);
   private readonly lazyDialogService = inject(LazyDialogService);
 
-  readonly isProcessing = this.previewService.isProcessing;
-  readonly hasDocument = this.documentService.hasDocument;
+  readonly isProcessing = computed(() => {
+    const isProcessing =
+      this.storeService.documentProcessing() ||
+      this.storeService.pageRenderingProcessing();
+
+    return isProcessing;
+  });
+  readonly hasDocument = this.storeService.hasDocument;
 
   async onDownloadFile() {
     await this.documentService.save('new');

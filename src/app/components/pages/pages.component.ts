@@ -11,7 +11,6 @@ import { MixedCdkDragDropModule } from 'angular-mixed-cdk-drag-drop';
 import { TranslocoPipe } from '@ngneat/transloco';
 
 import { DocumentService } from '@app/services/document.service';
-import { PreviewService } from '@app/services/preview.service';
 import { EmptyComponent } from '../empty/empty.component';
 import { ThumbnailComponent } from '../thumb/thumb.component';
 
@@ -34,13 +33,10 @@ import { ThumbnailComponent } from '../thumb/thumb.component';
 })
 export class PagesComponent {
   private readonly documentService = inject(DocumentService);
-  private readonly previewService = inject(PreviewService);
 
-  readonly previewRenders = this.previewService.pagesPreviews;
   readonly pageCount = this.documentService.pageCount;
   readonly pages = computed(() => {
     const pageCount = this.pageCount();
-    console.log(pageCount);
     if (!pageCount) return undefined;
 
     return Array.from(Array(pageCount).keys());

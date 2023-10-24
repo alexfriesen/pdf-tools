@@ -1,31 +1,24 @@
-import { Injectable, computed } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
+import { Injectable, computed, inject } from '@angular/core';
 import { PDFDocument } from 'pdf-lib';
-import { Subject } from 'rxjs';
 
 import { DocumentMetadata } from '@app/types/metadata';
+import { StoreService } from './store.service';
 
 @Injectable({ providedIn: 'root' })
 export class DocumentService {
-  document: PDFDocument | undefined;
+  private document: PDFDocument | undefined;
 
-  readonly documentBuffer$ = new Subject<Uint8Array | null>();
-  readonly documentBuffer = toSignal(this.documentBuffer$);
-
-  readonly hasDocument = computed(() => {
-    const document = this.documentBuffer();
-    return !!document;
-  });
+  private readonly storeService = inject(StoreService);
 
   readonly pageCount = computed(() => {
-    if (!this.documentBuffer()) return 0;
+    if (!this.storeService.documentBuffer()) return 0;
 
     return this.document?.getPageCount() || 0;
   });
 
   async loadPDF(pdfBuffer: ArrayBuffer) {
     this.document = await PDFDocument.load(pdfBuffer);
-    await this.updateDocumentBuffer();
+    await this.storeService.updateDocumentBuffer(this.document);
   }
 
   async appendPDF(pdfBuffer: ArrayBuffer) {
@@ -40,7 +33,7 @@ export class DocumentService {
       this.document.addPage(page);
     }
 
-    await this.updateDocumentBuffer();
+    await this.storeService.updateDocumentBuffer(this.document);
   }
 
   async removePage(pageIndex: number) {
@@ -49,7 +42,7 @@ export class DocumentService {
     } else {
       this.document = undefined;
     }
-    await this.updateDocumentBuffer();
+    await this.storeService.updateDocumentBuffer(this.document);
   }
 
   async movePage(oldIndex: number, newIndex: number) {
@@ -68,7 +61,23 @@ export class DocumentService {
       await this.document.removePage(oldIndex + 1);
     }
 
-    await this.updateDocumentBuffer();
+    await this.storeService.updateDocumentBuffer(this.document);
+  }
+
+  async swapPages(pageIndex1: number, pageIndex2: number) {
+    if (!this.document) return;
+
+    const [page1, page2] = await this.document.copyPages(this.document, [
+      pageIndex1,
+      pageIndex2,
+    ]);
+
+    await this.document.removePage(pageIndex2);
+    await this.document.insertPage(pageIndex2, page1);
+    await this.document.removePage(pageIndex1);
+    await this.document.insertPage(pageIndex1, page2);
+
+    await this.storeService.updateDocumentBuffer(this.document);
   }
 
   getMetadata(): DocumentMetadata {
@@ -91,32 +100,11 @@ export class DocumentService {
     this.document?.setKeywords((metadata.keywords || '').split(' '));
   }
 
-  async swapPages(pageIndex1: number, pageIndex2: number) {
-    if (!this.document) return;
-
-    const [page1, page2] = await this.document.copyPages(this.document, [
-      pageIndex1,
-      pageIndex2,
-    ]);
-
-    await this.document.removePage(pageIndex2);
-    await this.document.insertPage(pageIndex2, page1);
-    await this.document.removePage(pageIndex1);
-    await this.document.insertPage(pageIndex1, page2);
-
-    await this.updateDocumentBuffer();
-  }
-
   async save(fileName: string) {
     if (!this.document) return;
 
     const dataUri = await this.document.saveAsBase64({ dataUri: true });
     this.downloadAs(dataUri, `${fileName}.pdf`);
-  }
-
-  async updateDocumentBuffer() {
-    const buffer = (await this.document?.save()) || null;
-    this.documentBuffer$.next(buffer);
   }
 
   private downloadAs(dataUri: string, name: string) {
