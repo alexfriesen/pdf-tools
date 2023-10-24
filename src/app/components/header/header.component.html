@@ -37,11 +37,11 @@
       </mat-menu>
     </div>
   </mat-toolbar>
-
-  @if (isProcessing()) {
-    <mat-progress-bar mode="indeterminate" />
-  }
 </header>
+
+@if (isProcessing()) {
+  <mat-progress-bar mode="indeterminate" color="accent" />
+}
 
 @if (hasDocument()) {
   <div class="actions">
