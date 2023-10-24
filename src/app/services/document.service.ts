@@ -1,9 +1,9 @@
-import { Injectable } from '@angular/core';
+import { Injectable, computed } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { PDFDocument } from 'pdf-lib';
-import { Subject, map } from 'rxjs';
+import { Subject } from 'rxjs';
 
-import { Metadata } from '../types/metadata';
+import { DocumentMetadata } from '@app/types/metadata';
 
 @Injectable({ providedIn: 'root' })
 export class DocumentService {
@@ -12,9 +12,16 @@ export class DocumentService {
   readonly documentBuffer$ = new Subject<Uint8Array | null>();
   readonly documentBuffer = toSignal(this.documentBuffer$);
 
-  readonly pageCount$ = this.documentBuffer$.pipe(
-    map(() => this.document?.getPageCount() || 0)
-  );
+  readonly hasDocument = computed(() => {
+    const document = this.documentBuffer();
+    return !!document;
+  });
+
+  readonly pageCount = computed(() => {
+    if (!this.documentBuffer()) return 0;
+
+    return this.document?.getPageCount() || 0;
+  });
 
   async loadPDF(pdfBuffer: ArrayBuffer) {
     this.document = await PDFDocument.load(pdfBuffer);
@@ -40,7 +47,7 @@ export class DocumentService {
     if ((this.document?.getPageCount() || 0) > 1) {
       await this.document?.removePage(pageIndex);
     } else {
-      delete this.document;
+      this.document = undefined;
     }
     await this.updateDocumentBuffer();
   }
@@ -64,23 +71,23 @@ export class DocumentService {
     await this.updateDocumentBuffer();
   }
 
-  getMetadata() {
+  getMetadata(): DocumentMetadata {
     return {
-      title: this.document?.getTitle(),
-      author: this.document?.getAuthor(),
+      title: this.document?.getTitle() || '',
+      author: this.document?.getAuthor() || '',
+      subject: this.document?.getSubject() || '',
+      keywords: this.document?.getKeywords() || '',
       creator: this.document?.getCreator(),
-      subject: this.document?.getSubject(),
-      keywords: this.document?.getKeywords(),
       producer: this.document?.getProducer(),
       creationDate: this.document?.getCreationDate(),
       modificationDate: this.document?.getModificationDate(),
     };
   }
 
-  setMetadata(metadata: Metadata) {
-    this.document?.setTitle(metadata.title);
-    this.document?.setAuthor(metadata.author);
-    this.document?.setSubject(metadata.subject);
+  setMetadata(metadata: DocumentMetadata) {
+    this.document?.setTitle(metadata.title || '');
+    this.document?.setAuthor(metadata.author || '');
+    this.document?.setSubject(metadata.subject || '');
     this.document?.setKeywords((metadata.keywords || '').split(' '));
   }
 

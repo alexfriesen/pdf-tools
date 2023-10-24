@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule } from '@angular/material/dialog';
-import { TranslocoModule } from '@ngneat/transloco';
+import { TranslocoPipe } from '@ngneat/transloco';
 
 @Component({
   selector: 'app-about-dialog',
@@ -10,6 +10,6 @@ import { TranslocoModule } from '@ngneat/transloco';
   // styleUrls: ['./about-dialog.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
-  imports: [MatDialogModule, MatIconModule, MatButtonModule, TranslocoModule],
+  imports: [MatDialogModule, MatIconModule, MatButtonModule, TranslocoPipe],
 })
 export class AboutDialogComponent {}

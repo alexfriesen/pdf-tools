@@ -1,33 +1,5 @@
-@if(pages(); as pages) {
-  <div>
-    <div
-      class="list"
-      cdkDropListGroup
-      mixedCdkDragDrop
-      orientation="horizontal"
-      (dropped)="onChangePosition($event)"
-    >
-      @for (page of pages; track page) {
-        <span class="list" cdkDropList mixedCdkDropList>
-          <div cdkDrag class="item">
-            <button
-              class="remove"
-              mat-mini-fab
-              color="warn"
-              (click)="onRemovePage(page)"
-            >
-              <mat-icon>delete</mat-icon>
-            </button>
-
-            <app-thumb [pageIndex]="page" />
-          </div>
-        </span>
-      } @empty {}
-    </div>
-  </div>
+@if(hasDocument()) {
+  <app-pages />
 } @else {
-  <div class="empty">
-    <mat-icon color="accent">cloud_upload</mat-icon>
-    <p class="mat-headline-3">{{ 'drop here' | transloco }}</p>
-  </div>
+  <app-empty />
 }

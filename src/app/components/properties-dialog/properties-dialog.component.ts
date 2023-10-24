@@ -6,9 +6,9 @@ import { MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
-import { TranslocoModule } from '@ngneat/transloco';
+import { TranslocoPipe } from '@ngneat/transloco';
 
-import { Metadata } from '@app/types/metadata';
+import { DocumentMetadata } from '@app/types/metadata';
 
 @Component({
   selector: 'app-properties-dialog',
@@ -24,11 +24,11 @@ import { Metadata } from '@app/types/metadata';
     MatFormFieldModule,
     MatInputModule,
     MatIconModule,
-    TranslocoModule,
+    TranslocoPipe,
   ],
 })
 export class PropertiesDialogComponent {
-  readonly data = inject<Metadata>(MAT_DIALOG_DATA);
+  readonly data = inject<DocumentMetadata>(MAT_DIALOG_DATA);
 
   readonly form = new FormGroup({
     title: new FormControl(this.data.title || ''),

@@ -1,0 +1,24 @@
+<div
+  class="list"
+  cdkDropListGroup
+  mixedCdkDragDrop
+  orientation="horizontal"
+  (dropped)="onChangePosition($event)"
+>
+  @for (page of pages(); track page) {
+    <span class="list" cdkDropList mixedCdkDropList>
+      <div cdkDrag class="item">
+        <button
+          class="remove"
+          mat-mini-fab
+          color="warn"
+          (click)="onRemovePage(page)"
+        >
+          <mat-icon>delete</mat-icon>
+        </button>
+
+        <app-thumb [pageIndex]="page" />
+      </div>
+    </span>
+  } @empty {}
+</div>
