@@ -1,5 +1,7 @@
-@defer (when hasDocument()) {
-  <app-pages />
-} @placeholder {
+@if(hasDocument()) {
+  @defer {
+    <app-pages />
+  }
+} @else {
   <app-empty />
 }
