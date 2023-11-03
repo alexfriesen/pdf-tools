@@ -2,4 +2,8 @@
 
 This project contains some handy pdf tools.
 
-STATUS: WIP
+## Features:
+- Merge multiple PDF's
+- Rearrange Pages
+- Remove Pages
+- Edit PDF's Metadata
