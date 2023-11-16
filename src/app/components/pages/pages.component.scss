@@ -53,3 +53,9 @@ button.remove {
 .list.cdk-drop-list-dragging .item:not(.cdk-drag-placeholder) {
   transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
 }
+
+@media only screen and (max-width: 599px) {
+  .item {
+    max-width: 160px;
+  }
+}
