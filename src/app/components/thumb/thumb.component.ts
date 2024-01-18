@@ -2,9 +2,8 @@ import {
   Component,
   ChangeDetectionStrategy,
   inject,
-  Input,
   computed,
-  signal,
+  input,
 } from '@angular/core';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
@@ -21,15 +20,10 @@ import { PreviewService } from '@app/services/preview.service';
 export class ThumbnailComponent {
   private readonly pagesPreviews = inject(PreviewService).pagesPreviews;
 
-  @Input()
-  set pageIndex(value: number) {
-    this.currentPageIndex.set(value);
-  }
-
-  readonly currentPageIndex = signal<number | undefined>(undefined);
+  pageIndex = input.required<number>();
 
   readonly imageSrc = computed(() => {
-    const index = this.currentPageIndex();
+    const index = this.pageIndex();
     const found = this.pagesPreviews()?.find(
       (preview) => preview.pageIndex === index
     );
