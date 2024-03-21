@@ -1,4 +1,4 @@
-import { Directive, EventEmitter, HostListener, Output } from '@angular/core';
+import { Directive, HostListener, output } from '@angular/core';
 import { parseFilesFromEvent } from 'data-transfer-helper';
 
 @Directive({
@@ -6,11 +6,8 @@ import { parseFilesFromEvent } from 'data-transfer-helper';
   standalone: true,
 })
 export class DropAreaDirective {
-  @Output()
-  hovering = new EventEmitter<boolean>();
-
-  @Output()
-  filesDropped = new EventEmitter<File[]>();
+  readonly hovering = output<boolean>();
+  readonly filesDropped = output<File[]>();
 
   @HostListener('drop', ['$event'])
   async onDrop(event: DragEvent) {
