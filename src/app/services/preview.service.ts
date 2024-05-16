@@ -37,7 +37,7 @@ export class PreviewService {
   private async generatePagePreviews(buffer: Uint8Array | null) {
     if (!buffer) return false;
 
-    const task = getDocument({ data: buffer });
+    const task = getDocument({ data: buffer, isEvalSupported: false });
     const doc = await task.promise;
 
     await Promise.all(
