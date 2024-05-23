@@ -8,7 +8,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { MixedCdkDragDropModule } from 'angular-mixed-cdk-drag-drop';
-import { TranslocoPipe } from '@ngneat/transloco';
+import { TranslocoPipe } from '@jsverse/transloco';
 
 import { DocumentService } from '@app/services/document.service';
 import { EmptyComponent } from '../empty/empty.component';

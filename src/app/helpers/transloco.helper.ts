@@ -5,7 +5,7 @@ import {
   TranslocoLoader,
   Translation,
   getBrowserLang,
-} from '@ngneat/transloco';
+} from '@jsverse/transloco';
 
 export function generateAutoConfig(availableLangs: string[]) {
   const browserLang = getBrowserLang();
