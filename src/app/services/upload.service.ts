@@ -10,7 +10,7 @@ export class UploadService {
 
   readonly acceptTypes: string[] = ['application/pdf', '.pdf'];
 
-  input = this.createUploadElement();
+  readonly input = this.createUploadElement();
 
   openFilePrompt() {
     this.input.click();
