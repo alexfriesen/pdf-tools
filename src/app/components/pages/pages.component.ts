@@ -7,7 +7,6 @@ import {
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { DragDropModule } from '@angular/cdk/drag-drop';
-import { MixedCdkDragDropModule } from 'angular-mixed-cdk-drag-drop';
 import { TranslocoPipe } from '@jsverse/transloco';
 
 import { DocumentService } from '@app/services/document.service';
@@ -24,7 +23,6 @@ import { ThumbnailComponent } from '../thumb/thumb.component';
     MatIconModule,
     MatButtonModule,
     DragDropModule,
-    MixedCdkDragDropModule,
     TranslocoPipe,
 
     ThumbnailComponent,

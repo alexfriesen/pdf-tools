@@ -24,7 +24,6 @@
     "@jsverse/transloco": "^7.4.1",
     "@ngneat/elf": "^2.4.0",
     "@ngneat/elf-entities": "^5.0.0",
-    "angular-mixed-cdk-drag-drop": "^2.0.0",
     "data-transfer-helper": "^1.0.2",
     "pdf-lib": "^1.17.1",
     "pdfjs-dist": "~3.11.174",
@@ -38,6 +37,6 @@
     "@angular/compiler-cli": "^18.0.0",
     "@fontsource/material-icons": "^5.0.7",
     "@fontsource/roboto": "^5.0.0",
-    "typescript": "~5.4.0"
+    "typescript": "~5.5.0"
   }
 }
