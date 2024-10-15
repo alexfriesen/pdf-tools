@@ -1,14 +1,18 @@
 <h2 mat-dialog-title>
-  {{ data.name }}
+  {{ file.name }}
 </h2>
 
 <mat-dialog-content>
-  <p>Description: {{ data.description }}</p>
-  <p>MimeType: {{ data.mimeType }}</p>
+  <p>Description: {{ file.description }}</p>
+  <p>MimeType: {{ file.mimeType }}</p>
 </mat-dialog-content>
 
 <mat-dialog-content>
+  @if(file.mimeType.includes('image/')) {
+  <img [src]="dataUrl" />
+  } @else {
   <pre>{{ fileContent }}</pre>
+  }
 </mat-dialog-content>
 
 <mat-dialog-actions align="end">

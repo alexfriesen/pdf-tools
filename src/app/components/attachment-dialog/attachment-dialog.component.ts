@@ -26,11 +26,24 @@ import { DocumentAttachment } from '@app/types/attachment';
   ],
 })
 export class AttachmentDialogComponent {
-  readonly data = inject<DocumentAttachment>(MAT_DIALOG_DATA);
+  readonly file = inject<DocumentAttachment>(MAT_DIALOG_DATA);
 
   fileContent: string | undefined;
+  dataUrl: string | undefined;
 
   constructor() {
-    this.fileContent = new TextDecoder().decode(this.data.data);
+    this.fileContent = new TextDecoder().decode(this.file.data);
+    this.dataUrl = this.toBase64Data(this.file);
+  }
+
+  private toBase64Data(file: DocumentAttachment) {
+    return `data:${file.mimeType};base64,${blobToBase64(this.file.data)}`;
   }
 }
+
+export const blobToBase64 = (blob: Uint8Array) => {
+  const output = [];
+  for (let i = 0, { length } = blob; i < length; i++)
+    output.push(String.fromCharCode(blob[i]));
+  return btoa(output.join(''));
+};
