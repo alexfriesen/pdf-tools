@@ -1,0 +1,45 @@
+:host {
+  display: block;
+  width: 100%;
+  padding-left: 1rem;
+  padding-bottom: 1.25rem;
+  padding-right: 6rem;
+}
+
+.item {
+  position: relative;
+  border-radius: 0.25rem;
+  border: grey solid 2px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+
+  margin: 0.5rem;
+  max-width: 200px;
+
+  &:hover {
+    border-color: #3f51b5;
+  }
+
+  .tool {
+    position: absolute;
+    top: 0;
+    right: 0;
+  }
+}
+
+.icon.large {
+  font-size: 3rem;
+  width: 3rem;
+  height: 3rem;
+}
+
+.truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 100%;
+}

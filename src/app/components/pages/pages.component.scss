@@ -1,11 +1,26 @@
 :host {
-  display: block;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 1rem;
   position: relative;
   text-align: center;
+
+  height: 100%;
 }
 
 .list {
   display: flex;
+  flex: 0 1 auto;
+  flex-wrap: wrap;
+  flex-direction: row;
+  box-sizing: border-box;
+  overflow: auto;
+}
+
+.attachments {
+  display: flex;
+  flex: 0 1 auto;
   flex-wrap: wrap;
   flex-direction: row;
   box-sizing: border-box;
@@ -17,6 +32,7 @@
   border: grey solid 2px;
 
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   box-sizing: border-box;
@@ -27,12 +43,12 @@
   &:hover {
     border-color: #3f51b5;
   }
-}
 
-button.remove {
-  position: absolute;
-  top: 0;
-  right: 0;
+  .tool {
+    position: absolute;
+    top: 0;
+    right: 0;
+  }
 }
 
 .cdk-drag-preview {

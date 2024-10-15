@@ -3,6 +3,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { firstValueFrom } from 'rxjs';
 
 import { DocumentMetadata } from '@app/types/metadata';
+import { DocumentAttachment } from '@app/types/attachment';
 
 @Injectable({ providedIn: 'root' })
 export class LazyDialogService {
@@ -22,6 +23,17 @@ export class LazyDialogService {
     );
 
     return this.dialog.open(component.PropertiesDialogComponent, { data });
+  }
+
+  async openAttachmentDialog(data: DocumentAttachment) {
+    const component = await import(
+      '../components/attachment-dialog/attachment-dialog.component'
+    );
+    return this.dialog.open(component.AttachmentDialogComponent, {
+      data,
+      maxWidth: '92vw',
+      maxHeight: '92vh',
+    });
   }
 
   async openPropertiesDialogAsync(data: DocumentMetadata) {

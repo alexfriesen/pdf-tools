@@ -2,6 +2,7 @@ import { Injectable, computed, inject } from '@angular/core';
 import { PDFDocument } from 'pdf-lib';
 
 import { DocumentMetadata } from '@app/types/metadata';
+import { extractAttachments } from '@app/helpers/pdf.helper';
 import { StoreService } from './store.service';
 
 @Injectable({ providedIn: 'root' })
@@ -14,6 +15,12 @@ export class DocumentService {
     if (!this.storeService.documentBuffer()) return 0;
 
     return this.document?.getPageCount() || 0;
+  });
+
+  readonly attachments = computed(() => {
+    if (!this.storeService.documentBuffer()) return [];
+
+    return this.getAttachments();
   });
 
   async loadPDF(pdfBuffer: ArrayBuffer) {
@@ -98,6 +105,13 @@ export class DocumentService {
     this.document?.setAuthor(metadata.author || '');
     this.document?.setSubject(metadata.subject || '');
     this.document?.setKeywords((metadata.keywords || '').split(' '));
+  }
+
+  getAttachments() {
+    if (this.document) {
+      return extractAttachments(this.document);
+    }
+    return [];
   }
 
   async save(fileName: string) {

@@ -5,17 +5,18 @@
   (cdkDropListDropped)="onChangePosition($event)"
 >
   @for (page of pages(); track page) {
-    <div cdkDrag class="item">
-      <button
-        class="remove"
-        mat-mini-fab
-        color="warn"
-        (click)="onRemovePage(page)"
-      >
-        <mat-icon>delete</mat-icon>
-      </button>
+  <div cdkDrag class="item">
+    <button class="tool" mat-mini-fab color="warn" (click)="onRemovePage(page)">
+      <mat-icon>delete</mat-icon>
+    </button>
 
-      <app-thumb [pageIndex]="page" />
-    </div>
+    <app-thumb [pageIndex]="page" />
+  </div>
   } @empty {}
 </div>
+
+<section class="attachments">
+  @defer (when hasAttachments()) {
+  <app-attachments [attachments]="attachments()" />
+  }
+</section>

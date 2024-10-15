@@ -1,0 +1,27 @@
+<mat-expansion-panel>
+  <mat-expansion-panel-header>
+    Attachments: {{ attachments().length }}
+  </mat-expansion-panel-header>
+
+  <ng-template matExpansionPanelContent>
+    @for (attachment of attachments(); track attachment.name) {
+    <div class="item">
+      <button class="tool" mat-mini-fab (click)="inspectAttachment(attachment)">
+        <mat-icon>search</mat-icon>
+      </button>
+
+      @if (attachment.mimeType.includes('image/')) {
+      <mat-icon class="icon large" svgIcon="image" />
+      } @else if (attachment.mimeType.includes('xml')) {
+      <mat-icon class="icon large" svgIcon="xml" />
+      } @else {
+      <mat-icon class="icon large" svgIcon="unknown" />
+      }
+
+      <div class="truncate">
+        {{ attachment.name }}
+      </div>
+    </div>
+    } @empty {}
+  </ng-template>
+</mat-expansion-panel>

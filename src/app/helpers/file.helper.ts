@@ -7,6 +7,7 @@ export const readFileAsDataURLAsync = (file: File) =>
     };
 
     reader.onerror = reject;
+    reader.onabort = reject;
 
     reader.readAsDataURL(file);
   });

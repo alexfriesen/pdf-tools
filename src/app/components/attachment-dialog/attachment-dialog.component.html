@@ -1,0 +1,18 @@
+<h2 mat-dialog-title>
+  {{ data.name }}
+</h2>
+
+<mat-dialog-content>
+  <p>Description: {{ data.description }}</p>
+  <p>MimeType: {{ data.mimeType }}</p>
+</mat-dialog-content>
+
+<mat-dialog-content>
+  <pre>{{ fileContent }}</pre>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-flat-button color="accent" mat-dialog-close>
+    {{ 'close' | transloco }}
+  </button>
+</mat-dialog-actions>

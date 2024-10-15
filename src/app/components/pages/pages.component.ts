@@ -12,6 +12,7 @@ import { TranslocoPipe } from '@jsverse/transloco';
 import { DocumentService } from '@app/services/document.service';
 import { EmptyComponent } from '../empty/empty.component';
 import { ThumbnailComponent } from '../thumb/thumb.component';
+import { AttachmentsComponent } from '../attachments/attachments.component';
 
 @Component({
   selector: 'app-pages',
@@ -25,12 +26,16 @@ import { ThumbnailComponent } from '../thumb/thumb.component';
     DragDropModule,
     TranslocoPipe,
 
-    ThumbnailComponent,
     EmptyComponent,
+    ThumbnailComponent,
+    AttachmentsComponent,
   ],
 })
 export class PagesComponent {
   private readonly documentService = inject(DocumentService);
+
+  readonly attachments = this.documentService.attachments;
+  readonly hasAttachments = computed(() => this.attachments().length > 0);
 
   readonly pageCount = this.documentService.pageCount;
   readonly pages = computed(() => {
