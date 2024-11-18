@@ -7,10 +7,8 @@ import {
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { DragDropModule } from '@angular/cdk/drag-drop';
-import { TranslocoPipe } from '@jsverse/transloco';
 
 import { DocumentService } from '@app/services/document.service';
-import { EmptyComponent } from '../empty/empty.component';
 import { ThumbnailComponent } from '../thumb/thumb.component';
 import { AttachmentsComponent } from '../attachments/attachments.component';
 
@@ -19,17 +17,13 @@ import { AttachmentsComponent } from '../attachments/attachments.component';
   templateUrl: './pages.component.html',
   styleUrls: ['./pages.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: true,
   imports: [
     MatIconModule,
     MatButtonModule,
     DragDropModule,
-    TranslocoPipe,
-
-    EmptyComponent,
     ThumbnailComponent,
     AttachmentsComponent,
-  ],
+  ]
 })
 export class PagesComponent {
   private readonly documentService = inject(DocumentService);

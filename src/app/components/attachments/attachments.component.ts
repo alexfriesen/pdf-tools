@@ -11,7 +11,6 @@ import {
 } from '@angular/material/expansion';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
-import { TranslocoPipe } from '@jsverse/transloco';
 
 import { DocumentAttachment } from '@app/types/attachment';
 import { LazyDialogService } from '@app/services/lazy-dialog.service';
@@ -21,15 +20,13 @@ import { LazyDialogService } from '@app/services/lazy-dialog.service';
   templateUrl: './attachments.component.html',
   styleUrls: ['./attachments.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: true,
   imports: [
     MatExpansionPanel,
     MatExpansionPanelHeader,
     MatExpansionPanelContent,
     MatIconModule,
     MatButtonModule,
-    TranslocoPipe,
-  ],
+  ]
 })
 export class AttachmentsComponent {
   private readonly lazyDialogService = inject(LazyDialogService);

@@ -5,11 +5,10 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { TranslocoPipe } from '@jsverse/transloco';
 
 @Component({
-  selector: 'app-about-dialog',
-  templateUrl: './about-dialog.component.html',
-  // styleUrls: ['./about-dialog.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: true,
-  imports: [MatDialogModule, MatIconModule, MatButtonModule, TranslocoPipe],
+    selector: 'app-about-dialog',
+    templateUrl: './about-dialog.component.html',
+    // styleUrls: ['./about-dialog.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [MatDialogModule, MatIconModule, MatButtonModule, TranslocoPipe]
 })
-export class AboutDialogComponent {}
+export class AboutDialogComponent { }

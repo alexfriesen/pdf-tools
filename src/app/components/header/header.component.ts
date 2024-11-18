@@ -22,7 +22,6 @@ import { LazyDialogService } from '@app/services/lazy-dialog.service';
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: true,
   imports: [
     MatButtonModule,
     MatIconModule,
@@ -31,7 +30,7 @@ import { LazyDialogService } from '@app/services/lazy-dialog.service';
     MatToolbarModule,
     MatTooltipModule,
     TranslocoPipe,
-  ],
+  ]
 })
 export class HeaderComponent {
   private readonly storeService = inject(StoreService);

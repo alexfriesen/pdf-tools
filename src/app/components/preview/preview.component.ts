@@ -9,8 +9,7 @@ import { PagesComponent } from '../pages/pages.component';
   templateUrl: './preview.component.html',
   styleUrls: ['./preview.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: true,
-  imports: [EmptyComponent, PagesComponent],
+  imports: [EmptyComponent, PagesComponent]
 })
 export class PreviewComponent {
   readonly hasDocument = inject(StoreService).hasDocument;

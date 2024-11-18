@@ -3,11 +3,10 @@ import { MatIconModule } from '@angular/material/icon';
 import { TranslocoPipe } from '@jsverse/transloco';
 
 @Component({
-  selector: 'app-empty',
-  templateUrl: './empty.component.html',
-  styleUrls: ['./empty.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: true,
-  imports: [MatIconModule, TranslocoPipe],
+    selector: 'app-empty',
+    templateUrl: './empty.component.html',
+    styleUrls: ['./empty.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [MatIconModule, TranslocoPipe]
 })
-export class EmptyComponent {}
+export class EmptyComponent { }

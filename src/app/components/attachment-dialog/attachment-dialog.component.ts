@@ -1,5 +1,4 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { DatePipe } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -14,16 +13,14 @@ import { DocumentAttachment } from '@app/types/attachment';
   templateUrl: './attachment-dialog.component.html',
   styleUrls: ['./attachment-dialog.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: true,
   imports: [
-    DatePipe,
     MatButtonModule,
     MatDialogModule,
     MatFormFieldModule,
     MatInputModule,
     MatIconModule,
     TranslocoPipe,
-  ],
+  ]
 })
 export class AttachmentDialogComponent {
   readonly file = inject<DocumentAttachment>(MAT_DIALOG_DATA);

@@ -15,7 +15,6 @@ import { DocumentMetadata } from '@app/types/metadata';
   templateUrl: './properties-dialog.component.html',
   styleUrls: ['./properties-dialog.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: true,
   imports: [
     DatePipe,
     ReactiveFormsModule,
@@ -25,7 +24,7 @@ import { DocumentMetadata } from '@app/types/metadata';
     MatInputModule,
     MatIconModule,
     TranslocoPipe,
-  ],
+  ]
 })
 export class PropertiesDialogComponent {
   readonly data = inject<DocumentMetadata>(MAT_DIALOG_DATA);

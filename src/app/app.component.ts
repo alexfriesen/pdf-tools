@@ -13,18 +13,17 @@ import { MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';
 
 @Component({
-  selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  hostDirectives: [
-    {
-      directive: DropAreaDirective,
-      outputs: ['hovering', 'filesDropped'],
-    },
-  ],
-  standalone: true,
-  imports: [PreviewComponent, HeaderComponent],
+    selector: 'app-root',
+    templateUrl: './app.component.html',
+    styleUrls: ['./app.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    hostDirectives: [
+        {
+            directive: DropAreaDirective,
+            outputs: ['hovering', 'filesDropped'],
+        },
+    ],
+    imports: [PreviewComponent, HeaderComponent]
 })
 export class AppComponent {
   private readonly uploadService = inject(UploadService);

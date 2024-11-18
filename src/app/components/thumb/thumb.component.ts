@@ -14,8 +14,7 @@ import { PreviewService } from '@app/services/preview.service';
   templateUrl: './thumb.component.html',
   styleUrls: ['./thumb.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: true,
-  imports: [MatProgressSpinnerModule],
+  imports: [MatProgressSpinnerModule]
 })
 export class ThumbnailComponent {
   private readonly pagesPreviews = inject(PreviewService).pagesPreviews;
